@@ -1,0 +1,234 @@
+/* .back-menu {
+  background-color: rgb(224, 160, 21) !important;
+}
+.back-slider {
+  background-color: rgb(82, 82, 82) !important;
+}
+.collapsible {
+  background-color: rgb(224, 160, 21) !important;
+}
+*/
+.side-button {
+  background-image: linear-gradient(
+    to bottom right,
+    rgb(224, 160, 21),
+    rgb(224, 221, 15)
+  );
+}
+.doctor-offcanvas .offcanvas,
+.offcanvas-lg,
+.offcanvas-md,
+.offcanvas-sm,
+.offcanvas-xl,
+.offcanvas-xxl {
+  --bs-offcanvas-width: 250px !important;
+}
+
+.offcanvas-body {
+  background-image: linear-gradient(
+    to bottom right,
+    rgb(68, 67, 67),
+    rgb(209, 207, 207)
+  );
+  font-weight: bold;
+}
+
+.offcanvas-header {
+  background-image: linear-gradient(
+    to bottom right,
+    rgb(224, 160, 21),
+    rgb(224, 221, 15)
+  );
+  color: white !important;
+}
+
+.fa-angles-right {
+  margin-left: 5px;
+  font-size: 14px !important;
+}
+
+.side-button {
+  font-size: 15px !important;
+}
+
+.side-nav .nav-link:link {
+  color: rgb(224, 160, 21);
+}
+
+.side-nav .nav-link:visited {
+  color: rgb(224, 160, 21);
+}
+
+.side-link:hover {
+  background-color: rgb(105, 105, 105) !important;
+}
+.doctor-card {
+  line-height: 1;
+}
+.doctor-name {
+  font-size: 17px;
+  font-weight: bold;
+  color: rgb(87, 86, 86);
+}
+.doctor-exp {
+  font-size: 13px;
+  color: rgb(190, 166, 30);
+  font-weight: bold;
+}
+.doctor-time {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgb(102, 102, 102);
+}
+.doctor-avl {
+  font-size: 14px;
+  font-weight: 500;
+  color: rgb(102, 102, 102);
+}
+
+.span {
+  font-weight: 600;
+}
+.book-btn {
+  background-image: linear-gradient(
+    to bottom right,
+    rgb(224, 160, 21),
+    rgb(226, 196, 23)
+  );
+  font-weight: 500 !important;
+  color: rgb(87, 85, 85) !important;
+}
+
+.doctor-card {
+  width: 340px;
+  margin: auto;
+}
+.doctor-img1 div {
+  background-image: linear-gradient(
+    to bottom right,
+    rgb(224, 160, 21),
+    rgb(216, 205, 46)
+  );
+  height: 160px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  width: 100%;
+}
+
+.doctor-img2 {
+  background-color: rgba(221, 221, 221, 0.61);
+}
+.main-text {
+  background-color: rgba(223, 219, 219, 0.61);
+}
+.doctor-img2 img {
+  position: relative;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  z-index: 1;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  border: 7px solid rgb(236, 233, 233);
+  margin-top: -90px;
+}
+
+.card:hover .doctor-img2 img {
+  border-color: rgb(231, 223, 103);
+}
+@media only screen and (max-width: 330px) {
+  .doctor-card {
+    width: 300px;
+    margin: auto;
+  }
+}
+
+@media only screen and (max-width: 800px) {
+  .doctor-card {
+    width: 330px;
+    margin: auto;
+  }
+}
+.book-btn:hover {
+  background-image: linear-gradient(
+    to bottom right,
+    rgba(214, 185, 21, 0.801),
+    rgba(231, 163, 17, 0.897)
+  );
+}
+
+.card-list {
+  background-image: linear-gradient(
+    to bottom right,
+    rgb(255, 255, 255),
+    rgb(219, 219, 219),
+    rgb(129, 129, 129)
+  );
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 15px 0 rgba(0, 0, 0, 0.19);
+  transition: transform 0.2s;
+}
+
+.doc-edu {
+  font-size: 14px;
+}
+
+.card-list:hover {
+  transform: scale(1.1);
+  /* z-index: 1.5; */
+}
+.doctor-img {
+  object-fit: cover;
+}
+
+.modal-app .ant-modal-header {
+  background-image: linear-gradient(
+    to bottom right,
+    rgb(214, 185, 21),
+    rgb(231, 163, 17)
+  );
+}
+
+.modal-app .ant-modal-body {
+  background-image: linear-gradient(
+    to bottom right,
+    rgb(255, 255, 255),
+    rgb(219, 219, 219),
+    rgb(129, 129, 129)
+  );
+}
+
+.modal-app .ant-modal-footer {
+  /* border-top: 0;
+  border-radius: 0; */
+  background-image: linear-gradient(
+    to bottom right,
+    rgb(255, 255, 255),
+    rgb(219, 219, 219),
+    rgb(129, 129, 129)
+  );
+}
+
+.modal-app .ant-btn.ant-btn-default:hover {
+  color: rgb(224, 160, 21);
+  border-color: rgb(224, 160, 21);
+}
+
+.modal-app .ant-btn.ant-btn-primary {
+  background-image: linear-gradient(
+    to bottom right,
+    rgb(214, 185, 21),
+    rgb(231, 163, 17)
+  );
+  border-color: rgb(197, 138, 12);
+}
+
+.modal-app .ant-btn.ant-btn-primary:hover {
+  background-image: linear-gradient(
+    to bottom right,
+    rgb(223, 145, 29),
+    rgb(223, 193, 28)
+  );
+  border-color: rgb(231, 228, 45);
+  color: white;
+}

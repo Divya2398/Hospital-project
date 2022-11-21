@@ -1,0 +1,125 @@
+.paitent-sidebar .ant-layout-sider {
+  background-image: linear-gradient(
+    to bottom right,
+    #3a3939,
+    rgb(167, 166, 166)
+  );
+}
+
+.paitent-sidebar .offcanvas,
+.offcanvas-lg,
+.offcanvas-md,
+.offcanvas-sm,
+.offcanvas-xl,
+.offcanvas-xxl {
+  --bs-offcanvas-width: 350px !important;
+}
+
+.detail-card {
+  background-image: linear-gradient(
+    to bottom right,
+    rgb(184, 184, 184),
+    rgb(95, 95, 95)
+  );
+  color: rgb(255, 254, 253);
+}
+.pa-profile-btn {
+  color: rgb(255, 255, 255);
+  font-size: 15px;
+  border: 0;
+  border-bottom: solid 1px;
+  background-color: rgba(255, 255, 255, 0);
+  padding-bottom: 0px !important;
+}
+.new-app-card {
+  background-image: linear-gradient(
+    to bottom right,
+    rgb(214, 185, 21),
+    rgb(231, 163, 17)
+  );
+}
+.card-edit {
+  border-bottom: solid rgba(95, 95, 95, 0.486) 0.5px;
+  padding: 15px;
+}
+.edit-body {
+  font-weight: 400;
+}
+.new-button {
+  background-image: linear-gradient(
+    to bottom right,
+    rgb(78, 78, 78),
+    rgb(139, 139, 139)
+  );
+}
+.new-app-card {
+  width: 90%;
+}
+.patient-haeder {
+  height: 250px;
+  width: 100%;
+  text-align: center;
+  padding-top: 100px;
+  color: white;
+  overflow: hidden;
+  background: #c04848; /* fallback for old browsers */
+  background: linear-gradient(rgba(48, 47, 47, 0.8), rgba(238, 176, 42, 0.8)),
+    url("https://cdn.apollohospitals.com/dev-apollohospitals/2021/04/breadcrumb-2.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.new-app-btn {
+  background-image: linear-gradient(
+    to bottom right,
+    rgb(51, 51, 49),
+    rgb(241, 169, 12)
+  );
+  color: #fff !important;
+  font-weight: 500 !important;
+}
+
+.patient-input,
+.patient-input-disable {
+  margin: 10px;
+  font-size: 28px;
+  border: 0 !important;
+  border-bottom: 1.5px solid rgb(240, 240, 240) !important;
+  border-bottom-color: rgb(240, 240, 240);
+}
+
+.patient-input {
+  color: rgb(231, 224, 224) !important;
+  background-color: #66646400 !important;
+}
+
+.patient-input-disable {
+  color: rgb(94, 92, 92) !important;
+  background-color: #8888883f !important;
+}
+
+.profile-edit-btn {
+  background-image: linear-gradient(
+    to bottom right,
+    rgb(214, 185, 21),
+    rgb(231, 163, 17)
+  );
+  color: #fff !important;
+  border: solid 0.5;
+  border-color: rgb(204, 146, 39);
+}
+
+/* .pat-table .ant-table-thead > tr > th {
+  background: rgba(105, 105, 104, 0.966);
+  color: #fff;
+}
+
+.pat-table .ant-table-tbody tr > td {
+  background: rgba(161, 161, 161, 0.986);
+  color: #fff;
+}
+
+.pat-table .ant-table-tbody tr:hover {
+  background: rgba(161, 161, 161, 0.986);
+  color: #fff;
+} */

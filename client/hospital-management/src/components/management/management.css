@@ -1,0 +1,36 @@
+.login-button {
+  background-color: rgb(245, 161, 6) !important;
+  color: rgb(82, 82, 82);
+}
+
+.login-button:hover {
+  border: solid rgb(82, 82, 82) 0.5px;
+  color: rgb(255, 255, 255);
+}
+
+.card-header {
+  height: 60px;
+}
+
+.sign-card .ant-card-head {
+  background-color: rgb(245, 161, 6) !important;
+  text-align: center;
+  font-size: 18px;
+  color: #fff;
+}
+
+.log-sign-link:link {
+  color: rgb(245, 161, 6);
+}
+
+.log-sign-link:visited {
+  color: rgb(245, 161, 6);
+}
+.log-sign-link:active {
+  font-size: 16px;
+  color: rgb(245, 161, 6);
+}
+.log-sign-link:hover {
+  font-size: 16px;
+  color: rgb(247, 103, 103);
+}

@@ -1,0 +1,11 @@
+.current-date {
+  background-color: #002e58;
+  border: solid 0.5px;
+  border-color: rgb(86, 86, 87);
+  /* border-radius: 10px; */
+  color: rgb(192, 191, 191);
+}
+
+.app-table {
+  color: rgb(98, 98, 99) !important;
+}
