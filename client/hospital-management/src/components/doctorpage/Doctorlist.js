@@ -18,6 +18,7 @@ import { SERVER_URL } from "../../Globals";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import moment from "moment";
+import jwt_decode from "jwt-decode";
 // import weekday from "dayjs/plugin/weekday";
 
 const { Title } = Typography;
@@ -26,6 +27,18 @@ const { Option } = Select;
 const items = [];
 
 const Doctorlist = () => {
+  //set doctor detail
+  const [doctor_name, setDoctor_name] = useState("");
+  const [doctor_id, setDoctor_id] = useState("");
+  const [department_id, setDepartment_id] = useState("");
+  const [department_name, setDepartment_name] = useState("");
+
+  const [requested_date, setRequested_date] = useState("");
+  const token = localStorage.getItem("token");
+
+  //let decode = jwt_decode(token);
+  // console.log("token", token);
+
   const [day, setDay] = useState([]);
   const [form] = Form.useForm();
   const [selectedDay, setSelectedDay] = useState("");
@@ -55,9 +68,9 @@ const Doctorlist = () => {
     data: "",
   });
 
-  const [showSlotData, setShowSlotDay] = useState({
-    data: [],
-  });
+  // const [showSlotData, setShowSlotDay] = useState({
+  //   data: [],
+  // });
   const navigate = useNavigate();
 
   const [state, setState] = useState({
@@ -85,14 +98,15 @@ const Doctorlist = () => {
   const handleChange = (value) => {
     // this.setState({selectValue:e.target.value});
     console.log(value._d);
-    setSelectedDay(value);
+    let reqdate = value._d;
+    setRequested_date(reqdate);
     // setAvailableSlot({
     //   data: value,
     // });
 
     // console.log("value", value);
   };
-
+  console.log("Requested_date", requested_date);
   useEffect(() => {
     axios.get(SERVER_URL + "api/departements/getAllDepartments").then((res) => {
       console.log(res.data.data);
@@ -190,18 +204,26 @@ const Doctorlist = () => {
   };
 
   //slot data
-  const selectdata = (doctor_id, dep_id) => {
-    console.log(doctor_id, dep_id);
-    setIsSelecting(true);
-    setDetails({
-      ...details,
-      specialist_id: doctor_id,
-      department_id: dep_id,
-    });
+  const selectdata = (data) => {
+    console.log("data", data);
+    setDepartment_id(data.department_id);
+    setDepartment_name(data.department_name);
+    setDoctor_id(data.specialist_id);
+    setDoctor_name(data.specialist_name);
 
-    console.log("detailsssss", details);
+    // console.log(doctor_id, dep_id);
+
+    // setDetails({
+    //   ...details,
+    //   specialist_id: doctor_id,
+    //   department_id: dep_id,
+    // })
+
+    // console.log("detailsssss", details);
+    setIsSelecting(true);
     setOpen(true);
   };
+
   //
   const resetSelect = () => {
     setIsSelecting(false);
@@ -211,18 +233,28 @@ const Doctorlist = () => {
   //   console.log("data", data);
   // };
 
-  const handleSubmit = (data) => {
-    console.log(data);
-    setDetails({
-      ...details,
-      available_day: data.available_day,
-      available_slot: data.available_slot,
-    });
+  const handleSubmit = () => {
+    let decode = jwt_decode(token);
 
-    setIsSelecting(false);
+    const values = {
+      department_id: department_id,
+      department_name: department_name,
+      doctor_id: doctor_id,
+      doctor_name: doctor_name,
+      patient_id: decode.patient_id,
+      patient_name: decode.patient_name,
+      requested_date: requested_date,
+    };
+    axios
+      .post(SERVER_URL + "/api/appointment/request-appointment", values)
+      .then((res) => {
+        console.log(res);
+      });
+
+    // setIsSelecting(false);
   };
 
-  console.log("detailss", details);
+  // console.log("detailss", details);
   // form layout
   const responsive_layout = {
     labelCol: {
@@ -368,8 +400,8 @@ const Doctorlist = () => {
                           className="btn book-btn px-1 py-1 text-center"
                           // key={index}
                           onClick={() => {
-                            selectdata(obj.specialist_id);
-                            selectdata();
+                            // selectdata(obj.specialist_id);
+                            selectdata(obj);
                             setDay(obj.available_day);
                           }}
                         >
@@ -394,6 +426,7 @@ const Doctorlist = () => {
           }}
           onOk={() => {
             resetSelect();
+            handleSubmit();
           }}
           className="modal-app"
         >

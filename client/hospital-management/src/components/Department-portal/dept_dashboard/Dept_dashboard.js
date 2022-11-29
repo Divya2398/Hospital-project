@@ -21,6 +21,7 @@ import Today_appointment from "../doctorAppointment/Today_appointment";
 import Patientreports from "../patient_report/Patientreports";
 import ReportSetting from "../patient_report/Reportsetting";
 import Dept_patient from "../dept_patient/Dept_patient";
+import AppointmentSection from "../appointmentconfirm/Appointmentconfirm";
 
 const { Header, Sider, Content, Footer } = Layout;
 const Dept_dashboard = () => {

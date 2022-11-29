@@ -43,6 +43,12 @@ const Sidebar_menu = [
   {
     key: "6",
     icon: <IdcardOutlined />,
+    title: "Appointment",
+    link: "/appointment-section",
+  },
+  {
+    key: "6",
+    icon: <IdcardOutlined />,
     title: "Query Section",
     link: "/query-tab",
   },

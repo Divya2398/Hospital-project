@@ -28,6 +28,7 @@ import Doctorsettings from "../doctor_log/Doctorsettings";
 import Query_tab from "../user_query/Query_tab";
 import Departmentsetting from "../department/Departmentsetting";
 import Specialistsetting from "../specialist/Specialistsettings";
+import Appointmentsection from "../appointmentSection/Appointmentsection";
 
 const { Header, Sider, Content, Footer } = Layout;
 const Dashboard = () => {
@@ -122,6 +123,11 @@ const Dashboard = () => {
                   />
                   <Route exact path="/query-tab" element={<Query_tab />} />
                   <Route path="/payment-setting" element={<PaymentSetting />} />
+                  <Route
+                    exact
+                    path="/appointment-section"
+                    element={<Appointmentsection />}
+                  />
                   <Route path="*" element={<p>Path not resolved</p>} />
                   {/* <Route path="/Logout" element= {<Logout/>} /> */}
                 </Routes>

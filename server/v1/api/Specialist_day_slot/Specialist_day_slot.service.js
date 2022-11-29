@@ -164,7 +164,7 @@ async function get_dept_doctor(req, res) {
     const doctor = await specialistDaySlotSchema.aggregate([
       {
         $match: {
-          department_id: id,
+          appointment_staus: "pending",
         },
       },
       {
