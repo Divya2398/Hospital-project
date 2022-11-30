@@ -10,6 +10,7 @@ import {
   Form,
   DatePicker,
   Space,
+  message,
 } from "antd";
 import "./Doctor.css";
 import axios from "axios";
@@ -249,6 +250,9 @@ const Doctorlist = () => {
       .post(SERVER_URL + "/api/appointment/request-appointment", values)
       .then((res) => {
         console.log(res);
+        setTimeout(() => {
+          message.warning(res.data.message);
+        }, 1000);
       });
 
     // setIsSelecting(false);
@@ -420,7 +424,7 @@ const Doctorlist = () => {
         <Modal
           title="Select Your Appointment date"
           visible={isselecting}
-          okText="Proceed For Payment"
+          okText="Request Appointment"
           onCancel={() => {
             resetSelect();
           }}

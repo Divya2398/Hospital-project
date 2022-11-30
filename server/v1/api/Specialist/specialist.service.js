@@ -399,28 +399,31 @@ async function doctorlogin(req, res, next) {
     if (doctor) {
       // console.log(data.length);
       console.log("data", doctor);
-
-      // let ismatch = bcrypt.compare(password, data.password);
-      // if (ismatch) {
-      //   const payload = {
-      //     specialist_id: data.specialist_id,
-      //     department_id: data.department_id,
-      //     specialist_name: data.specialist_name,
-      //     image: data.image,
-      //   };
-      const token = jwt.sign("payload", "doctor-key");
-      return res.json({
-        status: "success",
-        message: "data fetched",
-        data: token,
-        result: doctor,
-      });
-      // } else {
-      //   return res.json({
-      //     status: "failure",
-      //     message: "password doesn't match",
-      //   });
-      // }
+      let ismatch = bcrypt.compare(password, doctor.password);
+      if (ismatch) {
+        const payload = {
+          specialist_id: doctor.specialist_id,
+          department_id: doctor.department_id,
+          specialist_name: doctor.specialist_name,
+          specialisation: doctor.specialisation,
+          department_name: doctor.department_name,
+          experience: doctor.experience,
+          time: doctor.time,
+          image: doctor.image,
+        };
+        const token = jwt.sign(payload, "doctor-key");
+        return res.json({
+          status: "success",
+          message: `logged in as ${doctor.specialist_name}`,
+          data: token,
+          result: doctor,
+        });
+      } else {
+        return res.json({
+          status: "failure",
+          message: "password doesn't match",
+        });
+      }
     } else {
       return res.json({
         status: "failure",

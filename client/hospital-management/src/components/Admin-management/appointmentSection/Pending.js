@@ -7,11 +7,11 @@ import {
   Table,
   Form,
   Modal,
-  Select,
-  Divider,
   DatePicker,
+  message,
 } from "antd";
 import dayjs from "dayjs";
+import Swal from "sweetalert2";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 
 import axios from "axios";
@@ -21,7 +21,6 @@ import moment from "moment";
 
 const Pending = () => {
   dayjs.extend(customParseFormat);
-
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
@@ -32,7 +31,7 @@ const Pending = () => {
     data: [],
   });
   // get appointments
-  useEffect(() => {
+  const get = () => {
     axios
       .get(SERVER_URL + "api/appointment/get-pending-appointment")
       .then((res) => {
@@ -41,6 +40,9 @@ const Pending = () => {
           data: res.data.result,
         });
       });
+  };
+  useEffect(() => {
+    get();
   }, []);
 
   const data = state.data;
@@ -75,11 +77,53 @@ const Pending = () => {
       )
       .then((res) => {
         console.log(res);
+        get();
       });
   };
   // on date change
   const onChangedate = (date) => {
     setConformdate(date);
+  };
+  //deny appointment
+  const deny = (data) => {
+    console.log(data);
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Do you want to cancel this appointment request",
+      icon: "warning",
+      showCancelButton: true,
+      // confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d40000",
+      confirmButtonText: "Yes,Deny it!",
+      background: "#FFFFFF",
+      // color: "",
+      width: "300px",
+
+      // iconColor: "#00CCFF",
+      // confirmButtonColor: "#00CCFF",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const cancel = axios
+          .put(
+            SERVER_URL +
+              `api/appointment/deny-appointment?appointment_id=${data.appointment_id}`
+          )
+          .then((response) => {
+            console.log(response);
+            if (response.data.status === "success") {
+              setTimeout(() => {
+                message.warning(response.data.message);
+              }, 1000);
+              get();
+              // window.localStorage.clear();
+              // window.location.href = "/";
+            }
+          })
+          .catch((err) => {
+            console.log(err.message);
+          });
+      }
+    });
   };
 
   //disable date
@@ -261,7 +305,7 @@ const Pending = () => {
         <Button
           type="primary"
           onClick={() => {
-            // show(data);
+            deny(data);
           }}
         >
           Deny

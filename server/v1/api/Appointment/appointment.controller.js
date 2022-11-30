@@ -25,9 +25,22 @@ async function confirmAppointment(req, res, next) {
   });
 }
 
+async function denyAppointment(req, res, next) {
+  await Service.denyAppointment(req, res, function (result) {
+    return res.json({ message: result.message });
+  });
+}
+
+async function getTodayAppointment(req, res, next) {
+  await Service.getTodayAppointment(req, res, function (result) {
+    return res.json({ message: result.message });
+  });
+}
 export default {
   requestedappointment,
   getRequestedAppointment,
   Booked,
   confirmAppointment,
+  denyAppointment,
+  getTodayAppointment,
 };

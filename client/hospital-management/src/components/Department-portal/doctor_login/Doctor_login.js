@@ -19,9 +19,8 @@ const Doctor_login = () => {
         console.log("res", res.data.data);
         // console.log("decode", jwt_decode(res.data.data));
 
-        localStorage.setItem("doctor-token", res.data.data);
-
         if (res.data.status === "success") {
+          localStorage.setItem("doctor-token", res.data.data);
           setTimeout(() => {
             message.success(res.data.message);
           }, 1000);

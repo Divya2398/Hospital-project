@@ -23,7 +23,7 @@ const Dept_doctors = () => {
   useEffect(() => {
     axios
       .get(
-        SERVER_URL + `api/specialistDaySlot/get-dept-doctor?department_id=${id}`
+        SERVER_URL + `api/specialist/getspecialistByDepId?department_id=${id}`
       )
       .then((res) => {
         console.log("resul", res.data.result);
@@ -135,14 +135,15 @@ const Dept_doctors = () => {
     },
     {
       title: "Doctor Name",
-      dataIndex: "doctor",
-      key: "doctor",
-      render: (doctor) => doctor.specialist_name,
+      // dataIndex: "data",
+      key: "doctor name",
+      render: (data) => data.specialist_name,
       // ...getColumnSearchProps("specialist_name"),
     },
+
     {
       title: "Doctor Profile",
-      dataIndex: "doctor",
+      // dataIndex: "doctor",
       key: "doctor",
       width: "15%",
 
@@ -159,18 +160,30 @@ const Dept_doctors = () => {
       ),
     },
     {
+      title: "Doctor Experience",
+      dataIndex: "experience",
+      key: "experience",
+    },
+    {
+      title: "Doctor Specialisation",
+      dataIndex: "specialisation",
+      key: "specialisation",
+    },
+    {
       title: "OP Day",
       dataIndex: "available_day",
       key: "available_day",
+      fixed: "right",
+      render: (available_day) => available_day.map((service) => service).join(),
     },
   ];
   return (
     <>
       <Table
         columns={columns}
-        // dataSource={data}
+        dataSource={data}
         scroll={{
-          x: 900,
+          x: 1300,
         }}
       />
     </>

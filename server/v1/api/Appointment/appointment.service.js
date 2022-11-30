@@ -1,6 +1,7 @@
 import appointmentSchema from "./appointment.model.js";
 import userSchema from "../User/user.model.js";
 import userId from "../User/user.model.js";
+import moment from "moment";
 
 async function requestedappointment(req, res, next) {
   try {
@@ -93,12 +94,13 @@ async function confirmAppointment(req, res, next) {
     console.log("data", req.body);
     let id = req.query.appointment_id;
     let date = req.body.confirm_date;
+    const data = moment(date).format("DD/MM/YYYY");
     const find = await appointmentSchema.findOne({ appointment_id: id }).exec();
     if (find) {
       console.log(find);
       const update = await appointmentSchema.findOneAndUpdate(
         { appointment_id: id },
-        { $set: { confrimed_date: date }, appointment_staus: "conform" },
+        { $set: { confrimed_date: data }, appointment_staus: "conform" },
         { new: true }
       );
       console.log("data", update);
@@ -112,6 +114,69 @@ async function confirmAppointment(req, res, next) {
         status: "failure",
         message: "no such appointment record",
       });
+    }
+  } catch (error) {
+    return res.json({ status: "error found", message: error.message });
+  }
+}
+
+async function denyAppointment(req, res, next) {
+  try {
+    console.log(req.query.appointment_id);
+    // console.log("data", req.body);
+    let id = req.query.appointment_id;
+    const find = await appointmentSchema.findOne({ appointment_id: id }).exec();
+    if (find) {
+      console.log(find);
+      const update = await appointmentSchema.findOneAndUpdate(
+        { appointment_id: id },
+        { appointment_staus: "deny" },
+        { new: true }
+      );
+      console.log("data", update);
+      return res.json({
+        status: "success",
+        message: "appointment denied",
+        result: update,
+      });
+    } else {
+      return res.json({
+        status: "failure",
+        message: "no such appointment record",
+      });
+    }
+  } catch (error) {
+    return res.json({ status: "error found", message: error.message });
+  }
+}
+
+async function getTodayAppointment(req, res, next) {
+  try {
+    const current = new Date();
+    const date = moment(current).format("DD/MM/YYYY");
+
+    console.log("date", date);
+    const department_id = req.query.department_id;
+    const doctor_id = req.query.doctor_id;
+    // const date = `${current.getDate()}/${
+    //   current.getMonth() + 1
+    // }/${current.getFullYear()}`;
+    const find = await appointmentSchema
+      .find({
+        department_id,
+        doctor_id,
+        appointment_staus: "conform",
+        confrimed_date: date,
+      })
+      .exec();
+    if (find) {
+      return res.json({
+        status: "success",
+        message: "today's appointment",
+        result: find,
+      });
+    } else {
+      return res.json({ status: "failure", message: "no data" });
     }
   } catch (error) {
     return res.json({ status: "error found", message: error.message });
@@ -142,4 +207,6 @@ export default {
   getRequestedAppointment,
   Booked,
   confirmAppointment,
+  denyAppointment,
+  getTodayAppointment,
 };

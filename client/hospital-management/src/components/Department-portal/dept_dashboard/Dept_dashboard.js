@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
   BrowserRouter as Router,
@@ -11,7 +11,7 @@ import {
   MenuUnfoldOutlined,
   LogoutOutlined,
 } from "@ant-design/icons";
-import { Layout, Menu } from "antd";
+import { Layout, Menu, Typography } from "antd";
 import Portal_menu from "./Dept_menu";
 import Dept_doctors from "../dept_doctors/Dept_doctors";
 import Doctor_login from "../doctor_login/Doctor_login";
@@ -22,17 +22,30 @@ import Patientreports from "../patient_report/Patientreports";
 import ReportSetting from "../patient_report/Reportsetting";
 import Dept_patient from "../dept_patient/Dept_patient";
 import AppointmentSection from "../appointmentconfirm/Appointmentconfirm";
+import jwt_decode from "jwt-decode";
 
 const { Header, Sider, Content, Footer } = Layout;
 const Dept_dashboard = () => {
+  const { Title } = Typography;
   const [collapsed, setCollapsed] = useState(false);
   const [title, setTitle] = useState("");
   const [logo, setLogo] = useState("");
+  const [dept, setDept] = useState({});
   const handleLogout = () => {
     localStorage.removeItem("token");
     window.location.href = "/";
     //  localStorage.setItem("loginstatus","0")
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const decode = jwt_decode(token);
+      console.log(decode);
+      setDept(decode);
+    }
+  }, []);
+
   return (
     <Router>
       <Layout>
@@ -50,7 +63,12 @@ const Dept_dashboard = () => {
               bottom: 0,
             }}
           >
-            <div className="logo" />
+            <div className="logo">
+              <Title level={4} className="text-center">
+                {dept?.department_name}
+              </Title>
+            </div>
+
             <Menu theme="dark" mode="inline">
               {Portal_menu.map((val, key) => {
                 return (

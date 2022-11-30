@@ -6,13 +6,17 @@ import {
 } from "@ant-design/icons";
 import { Button, Input, Space, Table, Typography } from "antd";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+
 import "./Doctorapp.css";
 import moment from "moment";
+import axios from "axios";
+import jwt_decode from "jwt-decode";
+import { SERVER_URL } from "../../../Globals";
 const { Title } = Typography;
 
 const Today_appointment = () => {
-  //cuurent date
+  const [state, setState] = useState({ data: [] });
+  //current date
   const current = new Date();
   const date = `${current.getDate()}/${
     current.getMonth() + 1
@@ -21,16 +25,38 @@ const Today_appointment = () => {
   const inputRef = useRef(null);
 
   const navigate = useNavigate();
-
+  //today appointment
+  const doc_token = localStorage.getItem("doctor-token");
+  // console.log("token", jwt_decode(doc_token));
+  const app = () => {
+    if (doc_token) {
+      const decode = jwt_decode(doc_token);
+      axios
+        .get(
+          SERVER_URL +
+            `api/appointment/get-today-appointment?department_id=${decode.department_id}&doctor_id=${decode.specialist_id}`
+        )
+        .then((res) => {
+          console.log(res.data.result);
+          setState({
+            data: res.data.result,
+          });
+        });
+    }
+  };
+  useEffect(() => {
+    app();
+  }, []);
   //dummy data
-  const data = [
-    {
-      patient_id: "123345",
-      first_name: "firstname",
-      last_name: "lastname",
-      appointment_id: "45678",
-    },
-  ];
+  const data = state.data;
+  // const data = [
+  //   {
+  //     patient_id: "123345",
+  //     first_name: "firstname",
+  //     last_name: "lastname",
+  //     appointment_id: "45678",
+  //   },
+  // ];
   // search function
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
@@ -131,7 +157,7 @@ const Today_appointment = () => {
     },
     {
       title: "First Name",
-      dataIndex: "first_name",
+      dataIndex: "doctor_name",
       key: "first_name",
       ...getColumnSearchProps("first_name"),
     },
