@@ -6,8 +6,8 @@ async function addreport(req, res) {
   });
 }
 
-async function getDailyReport(req, res) {
-  await Service.getDailyReport(req, res, function (result) {
+async function getPatientReport(req, res) {
+  await Service.getPatientReport(req, res, function (result) {
     return res.json({ message: result.message });
   });
 }
@@ -20,6 +20,6 @@ async function getreport(req, res) {
 
 export default {
   addreport,
-  getDailyReport,
+  getPatientReport,
   getreport,
 };

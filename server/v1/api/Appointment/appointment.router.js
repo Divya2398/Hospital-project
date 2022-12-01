@@ -10,6 +10,7 @@ router.get("/get-pending-appointment", Controller.getRequestedAppointment);
 router.put("/confirm-appointment", Controller.confirmAppointment);
 router.put("/deny-appointment", Controller.denyAppointment);
 router.get("/booked", Controller.Booked);
-router.get("/get-today-appointment", Controller.getTodayAppointment);
+// router.get("/get-today-appointment", Controller.getTodayAppointment);
+router.get("/get-today-appointment", Controller.getTodayApp);
 
 export default router;

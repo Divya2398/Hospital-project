@@ -18,8 +18,21 @@
 
 .review-msg {
   text-align: justify;
+  color: gray;
 }
 
 .review-txt {
   font-size: 16.5px;
+  font-weight: 500;
+  color: #001529;
+}
+
+.empty {
+  font-size: 35px;
+  color: #001529;
+}
+.no-data {
+  font-size: 18px;
+  color: #001529;
+  font-weight: 500;
 }

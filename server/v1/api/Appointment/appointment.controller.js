@@ -36,6 +36,12 @@ async function getTodayAppointment(req, res, next) {
     return res.json({ message: result.message });
   });
 }
+
+async function getTodayApp(req, res, next) {
+  await Service.getTodayApp(req, res, function (result) {
+    return res.json({ message: result.message });
+  });
+}
 export default {
   requestedappointment,
   getRequestedAppointment,
@@ -43,4 +49,5 @@ export default {
   confirmAppointment,
   denyAppointment,
   getTodayAppointment,
+  getTodayApp,
 };

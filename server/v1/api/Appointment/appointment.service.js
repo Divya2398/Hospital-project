@@ -183,6 +183,75 @@ async function getTodayAppointment(req, res, next) {
   }
 }
 
+async function getTodayApp(req, res, next) {
+  try {
+    const current = new Date();
+    const date = moment(current).format("DD/MM/YYYY");
+    console.log("date", date);
+    const department_id = req.query.department_id;
+    const doctor_id = req.query.doctor_id;
+    const appointment = await appointmentSchema.aggregate([
+      {
+        $match: {
+          $and: [
+            { department_id: department_id },
+            { doctor_id: doctor_id },
+            { appointment_staus: "conform" },
+            { confrimed_date: date },
+          ],
+        },
+      },
+      {
+        $lookup: {
+          from: "user",
+          localField: "patient_id",
+          foreignField: "patient_id",
+          as: "data",
+        },
+      },
+      // console.log(data),
+      {
+        $unwind: {
+          path: "$data",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          patient_id: 1,
+          requested_date: 1,
+          appointment_id: 1,
+          doctor_name: 1,
+          doctor_id: 1,
+          department_id: 1,
+          department_name: 1,
+          appointment_staus: 1,
+          confrimed_date: 1,
+          "data.first_name": 1,
+          "data.last_name": 1,
+          "data.mobile_number": 1,
+          "data.email": 1,
+          "data.gender": 1,
+          "data.dob": 1,
+        },
+      },
+    ]);
+    if (appointment) {
+      return res.status(200).json({
+        status: "success",
+        message: "patients appointment fetched",
+        result: appointment,
+      });
+    } else {
+      return res.status(400).json({ status: "no data found" });
+    }
+  } catch (error) {
+    console.log("error", error.message);
+    return res.json({ message: error.message });
+  }
+}
+
 async function Booked(req, res, next) {
   try {
     await appointmentSchema
@@ -209,4 +278,5 @@ export default {
   confirmAppointment,
   denyAppointment,
   getTodayAppointment,
+  getTodayApp,
 };

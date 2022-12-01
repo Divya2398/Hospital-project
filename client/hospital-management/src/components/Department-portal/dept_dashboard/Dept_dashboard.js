@@ -21,7 +21,7 @@ import Today_appointment from "../doctorAppointment/Today_appointment";
 import Patientreports from "../patient_report/Patientreports";
 import ReportSetting from "../patient_report/Reportsetting";
 import Dept_patient from "../dept_patient/Dept_patient";
-import AppointmentSection from "../appointmentconfirm/Appointmentconfirm";
+
 import jwt_decode from "jwt-decode";
 
 const { Header, Sider, Content, Footer } = Layout;
@@ -143,6 +143,11 @@ const Dept_dashboard = () => {
                     exact
                     path="/report-history"
                     element={<Patientreports />}
+                  />
+                  <Route
+                    exact
+                    path="/report-setting"
+                    element={<ReportSetting />}
                   />
                 </Routes>
               </div>

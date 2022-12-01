@@ -25,6 +25,11 @@ const Today_appointment = () => {
   const inputRef = useRef(null);
 
   const navigate = useNavigate();
+
+  //back-button
+  const handleclick = () => {
+    navigate("/doctor-board");
+  };
   //today appointment
   const doc_token = localStorage.getItem("doctor-token");
   // console.log("token", jwt_decode(doc_token));
@@ -157,15 +162,25 @@ const Today_appointment = () => {
     },
     {
       title: "First Name",
-      dataIndex: "doctor_name",
+      dataIndex: "data",
       key: "first_name",
       ...getColumnSearchProps("first_name"),
+      render: (data) => data.first_name,
     },
     {
       title: "Last Name",
-      dataIndex: "last_name",
+      dataIndex: "data",
       key: "last_name",
+      // width: "10%",
       ...getColumnSearchProps("last_name"),
+      render: (data) => data.last_name,
+    },
+    {
+      title: "Mobile",
+      dataIndex: "data",
+      key: "number",
+      ...getColumnSearchProps("data"),
+      render: (data) => data.mobile_number,
     },
     {
       title: "Appointment Id",
@@ -182,7 +197,7 @@ const Today_appointment = () => {
         <>
           <Button
             onClick={() => {
-              navigate("/report-setting");
+              navigate("/report-setting", { state: { data } });
             }}
           >
             Paient reports
@@ -193,12 +208,22 @@ const Today_appointment = () => {
   ];
   return (
     <>
-      <div className="current-date d-inline-block me-3">
-        <p className="m-0 p-1">{date}</p>
+      <div className="d-flex justify-content-between">
+        <div className="">
+          <div className="current-date d-inline-block me-3">
+            <p className="m-0 p-1">{date}</p>
+          </div>
+          <div className="current-date d-inline-block">
+            <p className="m-0 p-1">{day}</p>
+          </div>
+        </div>
+        <div className="current-date d-inline-block">
+          <button className="m-0 p-1 btn text-white" onClick={handleclick}>
+            <i class="fa-solid fa-left-long"></i> Back
+          </button>
+        </div>
       </div>
-      <div className="current-date d-inline-block">
-        <p className="m-0 p-1">{day}</p>
-      </div>
+
       <div className="mt-3">
         <Title
           level={4}
@@ -210,9 +235,9 @@ const Today_appointment = () => {
         <Table
           columns={columns}
           dataSource={data}
-          // scroll={{
-          //   x: 1300,
-          // }}
+          scroll={{
+            x: 1200,
+          }}
         />
       </div>
     </>

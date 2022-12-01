@@ -13,7 +13,7 @@ const reportSchema = new mongoose.Schema(
     appointment_id: { type: String },
     department_name: { type: String },
     message: { type: String, require: true },
-    prescripton: { type: String, require: true },
+    prescription: { type: String, require: true },
   },
   {
     timestamps: true,
