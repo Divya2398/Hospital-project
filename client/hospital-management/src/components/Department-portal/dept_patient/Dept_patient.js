@@ -1,14 +1,48 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Input, Button, Form, Image, Typography } from "antd";
-const { Title } = Typography;
+import { Input, Button, Form, Image, Typography, message } from "antd";
+import axios from "axios";
+import jwt_decode from "jwt-decode";
+import { SERVER_URL } from "../../../Globals";
 
 const Dept_patient = () => {
+  const { Title } = Typography;
   const [form] = Form.useForm();
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
   //handle submit
-  const formSubmit = () => {
-    navigate("/report-history");
+  const formSubmit = (values) => {
+    const decode = jwt_decode(token);
+    axios
+      .post(
+        SERVER_URL +
+          `api/reports/patient-Report-byId?department_id=${decode.department_id}`,
+        values
+      )
+      .then((res) => {
+        console.log("res", res);
+        if (res.data.status === "success") {
+          setTimeout(() => {
+            message.success(res.data.message);
+          }, 1000);
+          const array = res.data.data;
+          const key = "specialist_id";
+          const data = [
+            ...new Map(array.map((item) => [item[key], item])).values(),
+          ];
+          console.log("unique", data);
+
+          navigate("/department-patient_report", { state: { data } });
+        } else {
+          setTimeout(() => {
+            message.warning(res.data.message);
+          }, 1000);
+        }
+      })
+      .catch((err) => {
+        console.log("error", err.message);
+      });
+    // navigate("/report-history");
   };
   //form-layout
   const responsive_layout = {

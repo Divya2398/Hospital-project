@@ -10,7 +10,7 @@ const Patientreports = () => {
   const location = useLocation();
   const [nodata, setNodata] = useState(false);
   const [state, setState] = useState({ data: [] });
-  // console.log(location.state.data, " useLocation Hook");
+  console.log(location.state.data, " useLocation Hook");
 
   // state from previous component
   const detail = location.state.data;
@@ -43,7 +43,7 @@ const Patientreports = () => {
           setNodata(true);
         }
       });
-  }, []);
+  }, [detail]);
   console.log("state--", state);
   return (
     <>
@@ -76,7 +76,7 @@ const Patientreports = () => {
                         <p>Date : {moment(key.date).format("DD/MM/YYYY")}</p>
                       </div>
                       <div>
-                        <p className="m-1 review-txt">Consulation Review</p>
+                        <p className="m-1 review-txt">Consultation Review</p>
                         <p className="review-msg m-1">{key.message}</p>
                       </div>
                       <div>

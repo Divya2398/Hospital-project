@@ -18,8 +18,21 @@ async function getreport(req, res) {
   });
 }
 
+async function patientReportId(req, res) {
+  await Service.patientReportId(req, res, function (result) {
+    return res.json({ message: result.message });
+  });
+}
+async function checkpatienthistory(req, res) {
+  await Service.checkpatienthistory(req, res, function (result) {
+    return res.json({ message: result.message });
+  });
+}
+
 export default {
   addreport,
   getPatientReport,
   getreport,
+  patientReportId,
+  checkpatienthistory,
 };
