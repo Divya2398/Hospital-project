@@ -9,3 +9,8 @@
 .app-table {
   color: rgb(98, 98, 99) !important;
 }
+
+.back-board {
+  background-color: #002e58 !important;
+  color: gray !important;
+}

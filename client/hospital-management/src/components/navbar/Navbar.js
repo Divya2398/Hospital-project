@@ -1,8 +1,14 @@
 import React, { useState } from "react";
-
 import "./navbar.css";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../redux/user/UserSlice";
 
 const Navbar = () => {
+  const dispatch = useDispatch();
+  const { loginStatus } = useSelector((state) => state.user);
+  console.log("status", JSON.parse(loginStatus));
+
+  // const handleclick = () => {};
   return (
     <>
       <nav className="navbar navbar-expand nav-1 py-0">
@@ -106,11 +112,6 @@ const Navbar = () => {
                 </a>
               </li>
               <li className="nav-item">
-                <a href="/login" className="nav-link">
-                  Login
-                </a>
-              </li>
-              <li className="nav-item">
                 <a href="/contact" className="nav-link">
                   Contact Us
                 </a>
@@ -121,6 +122,31 @@ const Navbar = () => {
                   Terms
                 </a>
               </li>
+
+              {JSON.parse(loginStatus) ? (
+                <li className="nav-item">
+                  <a
+                    href="#"
+                    onClick={() => dispatch(logout())}
+                    className="nav-link"
+                  >
+                    Logout
+                  </a>
+                </li>
+              ) : (
+                <>
+                  <li className="nav-item">
+                    <a href="/login" className="nav-link">
+                      Login
+                    </a>
+                  </li>
+                  <li className="nav-item">
+                    <a href="/sign-up" className="nav-link">
+                      Sign Up
+                    </a>
+                  </li>
+                </>
+              )}
             </ul>
           </div>
         </div>

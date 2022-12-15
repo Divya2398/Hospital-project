@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import decode from "jwt-decode";
+import fast2sms from "fast-two-sms";
 
 dotenv.config();
 // const twillo = require('twilio')(process.env.account_Sid, process.env.auth_Token)
@@ -26,16 +27,35 @@ async function register(req, res, next) {
     }
 
     let userdata = new userSchema(req);
-    let password = req.password;
-    if (password) {
-      let salt = await bcrypt.genSalt(10);
-      userdata.password = bcrypt.hashSync(password, salt);
-    }
+    let option = {
+      authorization:
+        "5dVudnsKWUYgeAe7RT9lfEU6YsFk4pCWLJXDW5tqh4EvB45ivDNtXOHUX6Up",
+      message: "your otp code for login is 45454",
+      numbers: ["7339080287"],
+    };
 
-    let data = await userdata.save();
-    return res
-      .status(200)
-      .json({ status: "success", message: "register successed", result: data });
+    // async function smsSend(option) {
+    //   const response = await fast2sms.sendMessage(option);
+    //   console.log(response);
+    // }
+    fast2sms
+      .sendMessage(option)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    // let password = req.password;
+    // if (password) {
+    //   let salt = await bcrypt.genSalt(10);
+    //   userdata.password = bcrypt.hashSync(password, salt);
+    // }
+
+    // let data = await userdata.save();
+    // return res
+    //   .status(200)
+    //   .json({ status: "success", message: "register successed", result: data });
   } catch (error) {
     return res.json({ status: "error found", message: error.message });
   }

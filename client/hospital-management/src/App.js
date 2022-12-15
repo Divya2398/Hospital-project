@@ -23,12 +23,10 @@ function App() {
 
   useEffect(() => {
     let token = localStorage.getItem("token");
-
     if (token) {
       console.log(token);
       let decode = jwt_decode(token);
       let role = decode.role;
-
       setState({
         det: role,
       });
@@ -41,8 +39,7 @@ function App() {
 
   console.log(state.det);
 
-  // useEffect(()=>{
-
+  // useEffect(()=>{,,,mm
   // let token = localStorage.getItem("token");
   // console.log(token);
   // let decode = jwt_decode(token);
@@ -50,7 +47,6 @@ function App() {
   //   setState({
   //   det : decode.role
   // })
-
   // },[])
 
   return (
@@ -69,7 +65,7 @@ function App() {
           {/* <Route path="/payment" element={<Payment />} /> */}
         </Routes>
       </Router>
-      {state.det === "data" ? (
+      {state.det === "data" || state.det === "user" ? (
         <Router>
           <Routes>
             <Route exact path="/" element={<Homepage />} />
@@ -78,23 +74,25 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/sign-up" element={<Sign_up />} />
+            <Route path="/for-patient" element={<Patient />} />
           </Routes>
         </Router>
       ) : null}
 
       {state.det === "admin" ? <Dashboard /> : null}
 
-      {state.det === "user" ? (
+      {/* {state.det === "user" ? (
         <Router>
           <Routes>
-            <Route path="/" element={<Patient />} />
+            <Route exact path="/" element={<Homepage />} />
+            <Route path="/for-patient" element={<Patient />} />
             <Route exact path="/login" element={<Managemtnt_Login />} />
             <Route path="/doctor-list" element={<Doctorlist />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/terms" element={<Terms />} />
           </Routes>
         </Router>
-      ) : null}
+      ) : null} */}
 
       {state.det === "department" ? <Dept_dashboard /> : null}
     </>

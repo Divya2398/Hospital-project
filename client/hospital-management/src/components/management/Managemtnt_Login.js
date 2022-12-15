@@ -1,43 +1,58 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Navbar from "../navbar/Navbar";
 import { SERVER_URL } from "../../Globals";
 import { Input, Button, Form, Image, Typography, message } from "antd";
 import "./management.css";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
+import { useNavigate } from "react-router-dom";
+
+import { useDispatch, useSelector } from "react-redux";
+// import { userSlice } from "../../redux/user/UserSlice";
+import { userlogin } from "../../redux/user/UserSlice";
 const { Title } = Typography;
 
 const Managemtnt_Login = () => {
+  const navigate = useNavigate();
+  const { user, token } = useSelector((state) => state.user);
   const [form] = Form.useForm();
+  const dispatch = useDispatch();
 
+  useEffect(() => {
+    if (user.role === "user") {
+      navigate("/for-patient");
+    } else {
+      window.location.href = "/";
+    }
+  }, [navigate, user]);
   const formSubmit = (values) => {
     console.log(values);
+    dispatch(userlogin(values));
+    // axios
+    //   .post(SERVER_URL + "api/admin/common-login", values)
+    //   .then((res) => {
+    //     console.log("res", res);
+    //     console.log("res", res.data.data);
+    //     console.log("decode", jwt_decode(res.data.data));
 
-    axios
-      .post(SERVER_URL + "api/admin/common-login", values)
-      .then((res) => {
-        console.log("res", res);
-        console.log("res", res.data.data);
-        console.log("decode", jwt_decode(res.data.data));
+    //     localStorage.setItem("token", res.data.data);
 
-        localStorage.setItem("token", res.data.data);
+    //     if (res.data.status === true) {
+    //       setTimeout(() => {
+    //         message.success(res.data.message);
+    //       }, 1000);
+    //     } else {
+    //       console.log("login");
+    //       setTimeout(() => {
+    //         message.warning(res.data.message);
+    //       }, 1000);
 
-        if (res.data.status === true) {
-          setTimeout(() => {
-            message.success(res.data.message);
-          }, 1000);
-        } else {
-          console.log("login");
-          setTimeout(() => {
-            message.warning(res.data.message);
-          }, 1000);
-
-          window.location.href = "/";
-        }
-      })
-      .catch((err) => {
-        console.log("error", err.message);
-      });
+    //       window.location.href = "/";
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     console.log("error", err.message);
+    //   });
   };
 
   const responsive_layout = {

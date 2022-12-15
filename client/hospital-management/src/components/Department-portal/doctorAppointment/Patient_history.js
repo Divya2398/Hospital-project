@@ -2,7 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Input, Button, Form, Image, Typography, message } from "antd";
 import axios from "axios";
-
+import "./Doctorapp.css";
 import { SERVER_URL } from "../../../Globals";
 import jwt_decode from "jwt-decode";
 const { Title } = Typography;
@@ -28,14 +28,11 @@ const Patient_history = () => {
           if (res.data.status === "success") {
             setTimeout(() => {
               message.success(res.data.message);
-            }, 1000);
-            const array = res.data.data;
-            // const key = "specialist_id";
-            // const data = [
-            //   ...new Map(array.map((item) => [item[key], item])).values(),
-            // ];
-            console.log("unique", array);
-
+            }, 1500);
+            const data = res.data.data[0];
+            // console.log("unique",data);
+            // getPatientReport;
+            navigate("/report-history", { state: { data } });
             // navigate("/department-patient_report", { state: { data } });
           } else {
             setTimeout(() => {
@@ -47,8 +44,10 @@ const Patient_history = () => {
           console.log("error", err.message);
         });
     }
-    //getPatientReport
-    // navigate("/report-history");
+  };
+  //back button
+  const handleback = () => {
+    navigate("/doctor-board");
   };
   //form-layout
   const responsive_layout = {
@@ -75,6 +74,11 @@ const Patient_history = () => {
   };
   return (
     <div className="mt-5">
+      <div className="mb-3">
+        <button className="btn back-board py-1" onClick={handleback}>
+          <i class="fa-solid fa-left-long"></i> back
+        </button>
+      </div>
       <div class="card mb-3 mx-auto " style={{ maxWidth: "600px" }}>
         <div className="card-header">
           <Title level={4} style={{ textAlign: "center" }} className="my-1">

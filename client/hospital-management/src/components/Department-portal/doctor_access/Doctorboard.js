@@ -1,16 +1,22 @@
 import React from "react";
 import { Input, Button, Form, Image, Typography } from "antd";
 import { LogoutOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import "./Doctorboard.css";
 const { Title } = Typography;
 
 const Doctorboard = () => {
+  //logout
+  const navigate = useNavigate();
+  const handlelogout = () => {
+    localStorage.removeItem("doctor-token");
+    navigate("/doctor-login");
+  };
   return (
     <>
       <div className="row">
         <div className="d-flex justify-content-end">
-          <button className="btn logout-btn">
+          <button className="btn logout-btn" onClick={handlelogout}>
             Logout&nbsp; <i class="fa-solid fa-right-from-bracket"></i>
           </button>
         </div>

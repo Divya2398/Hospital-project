@@ -73,8 +73,10 @@ async function CommonLogin(req, res) {
           status: "no such existing patient , new user register first",
         });
       } else {
+        console.log("password", password);
         console.log("pass", patient.password);
-        let ismatch = bcrypt.compare(password, patient.password);
+        let ismatch = await bcrypt.compare(password, patient.password);
+        console.log("match", ismatch);
         if (ismatch) {
           const payload = {
             patient_id: patient.patient_id,
@@ -85,6 +87,7 @@ async function CommonLogin(req, res) {
             last_name: patient.last_name,
             email: patient.email,
             role: patient.role,
+            mobile_number: patient.mobile_number,
           };
           const token = jwt.sign(payload, "secret key");
           return res.status(200).json({
