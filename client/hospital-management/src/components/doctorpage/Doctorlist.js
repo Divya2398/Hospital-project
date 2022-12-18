@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../navbar/Navbar";
-import { useNavigate } from "react-router-dom";
+
 import {
   Button,
   Input,
@@ -14,12 +14,14 @@ import {
 } from "antd";
 import "./Doctor.css";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { SERVER_URL } from "../../Globals";
 import dayjs from "dayjs";
+import { useDispatch, useSelector } from "react-redux";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import moment from "moment";
 import jwt_decode from "jwt-decode";
+
 // import weekday from "dayjs/plugin/weekday";
 
 const { Title } = Typography;
@@ -28,14 +30,14 @@ const { Option } = Select;
 const items = [];
 
 const Doctorlist = () => {
+  const { user, loginStatus, token } = useSelector((state) => state.user);
   //set doctor detail
   const [doctor_name, setDoctor_name] = useState("");
   const [doctor_id, setDoctor_id] = useState("");
   const [department_id, setDepartment_id] = useState("");
   const [department_name, setDepartment_name] = useState("");
-
   const [requested_date, setRequested_date] = useState("");
-  const token = localStorage.getItem("token");
+  //  const token = localStorage.getItem("token");
 
   //let decode = jwt_decode(token);
   // console.log("token", token);
@@ -206,11 +208,21 @@ const Doctorlist = () => {
 
   //slot data
   const selectdata = (data) => {
-    console.log("data", data);
-    setDepartment_id(data.department_id);
-    setDepartment_name(data.department_name);
-    setDoctor_id(data.specialist_id);
-    setDoctor_name(data.specialist_name);
+    const status = JSON.parse(loginStatus);
+    if (!status) {
+      alert(
+        "login to your account to request appointment .\n If you are new user register first."
+      );
+      navigate("/login");
+    } else {
+      console.log("data", data);
+      setDepartment_id(data.department_id);
+      setDepartment_name(data.department_name);
+      setDoctor_id(data.specialist_id);
+      setDoctor_name(data.specialist_name);
+      setIsSelecting(true);
+      setOpen(true);
+    }
 
     // console.log(doctor_id, dep_id);
 
@@ -221,8 +233,6 @@ const Doctorlist = () => {
     // })
 
     // console.log("detailsssss", details);
-    setIsSelecting(true);
-    setOpen(true);
   };
 
   //
@@ -236,7 +246,6 @@ const Doctorlist = () => {
 
   const handleSubmit = () => {
     let decode = jwt_decode(token);
-
     const values = {
       department_id: department_id,
       department_name: department_name,
@@ -423,7 +432,7 @@ const Doctorlist = () => {
       <div>
         <Modal
           title="Select Your Appointment date"
-          visible={isselecting}
+          open={isselecting}
           okText="Request Appointment"
           onCancel={() => {
             resetSelect();

@@ -34,3 +34,21 @@
   font-size: 16px;
   color: rgb(247, 103, 103);
 }
+
+.otp-text {
+  color: gray;
+  font-weight: 400;
+  font-size: 15px;
+}
+.otp-input {
+  width: 2em !important;
+  border: solid rgb(224, 153, 21) 1px;
+}
+
+.otp-container {
+  justify-content: center;
+}
+
+/* .otp-input:focus {
+  border: solid rgb(224, 153, 21) 1px;
+} */

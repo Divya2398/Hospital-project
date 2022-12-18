@@ -1,24 +1,26 @@
-import express from 'express';
-import Controller from './user.controller.js'
+import express from "express";
+import Controller from "./user.controller.js";
 
-const app = express()
+const app = express();
 
-let router = express.Router()
+let router = express.Router();
 
-console.log("router")
+console.log("router");
 
-router.post('/register', Controller.register)
+router.post("/register", Controller.register);
 
-router.post('/login', Controller.login)
+router.post("/login", Controller.login);
 
-router.put('/edit', Controller.Update)
+router.put("/edit", Controller.Update);
 
-router.post('/userlogin', Controller.userlogin)
+router.post("/userlogin", Controller.userlogin);
 
-router.post('/otp', Controller.OTP)
+router.post("/otp/:mobile_number", Controller.OTP);
+
+router.get("/get-user", Controller.getuser);
 
 // router.get('/register',  function(req, res){
 //     // register
 // })
 
-export default router
+export default router;

@@ -6,9 +6,7 @@ import { logout } from "../../redux/user/UserSlice";
 const Navbar = () => {
   const dispatch = useDispatch();
   const { loginStatus } = useSelector((state) => state.user);
-  console.log("status", JSON.parse(loginStatus));
-
-  // const handleclick = () => {};
+  // console.log("status", JSON.parse(loginStatus));
   return (
     <>
       <nav className="navbar navbar-expand nav-1 py-0">
@@ -107,7 +105,7 @@ const Navbar = () => {
                 </a>
               </li>
               <li className="nav-item">
-                <a href="/patient-data" className="nav-link">
+                <a href="/for-patient" className="nav-link">
                   For Patient
                 </a>
               </li>

@@ -2,7 +2,12 @@
 import "./App.css";
 import React, { useEffect, useState } from "react";
 import jwt_decode from "jwt-decode";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Redirect,
+} from "react-router-dom";
 import Dashboard from "./components/Admin-management/dashboard/Dashboard";
 import Homepage from "./components/homepage/Homepage";
 import Navbar from "./components/navbar/Navbar";
@@ -14,11 +19,15 @@ import Map from "./components/map/google_map";
 import Patient from "./components/for_patient/Patient_data";
 import Terms from "./components/privacy/Terms";
 import Payment from "./components/payment/Payment";
+import { useDispatch, useSelector } from "react-redux";
 import Dept_dashboard from "./components/Department-portal/dept_dashboard/Dept_dashboard";
+import ProtectedRoute from "./components/ProtectedRoute";
+import Otppage from "./components/management/Otppage";
 
 function App() {
+  const { loginStatus, token } = useSelector((state) => state.user);
   const [state, setState] = useState({
-    det: "data",
+    det: "user",
   });
 
   useEffect(() => {
@@ -30,11 +39,12 @@ function App() {
       setState({
         det: role,
       });
-    } else {
-      setState({
-        det: "data",
-      });
     }
+    // else {
+    //   setState({
+    //     det: "",
+    //   });
+    // }
   }, []);
 
   console.log(state.det);
@@ -65,7 +75,8 @@ function App() {
           {/* <Route path="/payment" element={<Payment />} /> */}
         </Routes>
       </Router>
-      {state.det === "data" || state.det === "user" ? (
+      {/* state.det === "data" || state.det === "user" */}
+      {state.det === "user" ? (
         <Router>
           <Routes>
             <Route exact path="/" element={<Homepage />} />
@@ -74,13 +85,20 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/sign-up" element={<Sign_up />} />
+            <Route path="/otp-page" element={<Otppage />} />
+            {/* <Route
+              path="/for-patient"
+              element={
+                <ProtectedRoute>
+                  <Patient />
+                </ProtectedRoute>
+              }
+            /> */}
             <Route path="/for-patient" element={<Patient />} />
           </Routes>
         </Router>
       ) : null}
-
       {state.det === "admin" ? <Dashboard /> : null}
-
       {/* {state.det === "user" ? (
         <Router>
           <Routes>
@@ -93,7 +111,6 @@ function App() {
           </Routes>
         </Router>
       ) : null} */}
-
       {state.det === "department" ? <Dept_dashboard /> : null}
     </>
   );

@@ -32,7 +32,6 @@ const Sign_up = () => {
   const formSubmit = (values) => {
     //  console.log(values)
     //  console.log(values.dob.toDate())
-
     axios
       .post(SERVER_URL + "api/user/register", values)
       .then((res) => {

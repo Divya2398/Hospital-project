@@ -4,17 +4,14 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import decode from "jwt-decode";
 import fast2sms from "fast-two-sms";
-
-dotenv.config();
-// const twillo = require('twilio')(process.env.account_Sid, process.env.auth_Token)
 import twilio from "twilio";
-// import { AwsInstance } from 'twilio/lib/rest/accounts/v1/credential/aws.js';
-twilio(process.env.account_Sid, process.env.auth_Token);
+dotenv.config();
 
-const account_Sid = process.env.account_Sid;
-const auth_Token = process.env.auth_Token;
-const userTwilio = new twilio(account_Sid, auth_Token);
-
+// const usertwilio = require("twilio")(account_Sid, auth_Token);
+// const twillo = require("twilio")(
+//   "ACbc2e05acfab21e5823802a77fbd2568b",
+//   "36ef697dac8ded88557c81028892fa0a"
+// );
 async function register(req, res, next) {
   try {
     let number = req.mobile_number;
@@ -156,9 +153,8 @@ async function Update(req, res) {
   }
 }
 
-// user login
-
 async function OTP(req, res, next) {
+  console.log("num", req.params.mobile_number);
   try {
     function generateOTP() {
       var digits = "0123456789";
@@ -168,25 +164,30 @@ async function OTP(req, res, next) {
       }
       return OTP;
     }
-    const number = req.query.mobile_number;
-    let user = await userSchema.findOneAndUpdate(
-      { mobile_number: number },
-      { otp: generateOTP() },
-      { new: true }
-    );
-
-    if (user) {
-      let data = twilio.message.create({
-        from: "",
-        to: number,
-        body: "otp:" + generateOTP,
+    const number = req.params.mobile_number;
+    if (number) {
+      const account_Sid = process.env.account_Sid;
+      const auth_Token = process.env.auth_Token;
+      const userTwilio = new twilio(account_Sid, auth_Token);
+      const getotp = generateOTP();
+      let data = await userTwilio.messages.create({
+        from: "+13868543166",
+        to: `+91${number}`,
+        body: "your otp for mobilenumber change request is:" + " " + getotp,
       });
       if (data) {
+        console.log(data);
         console.log("otp sent successfully");
-      } else {
-        console.log("failed");
+        res
+          .status(200)
+          .json({ status: "success", message: "Enter your otp", data: getotp });
       }
-      res.status(200).json({ status: "success", message: "otp sended" });
+    } else {
+      res.status(200).json({
+        status: "failure",
+        message:
+          "something went wrong or please provide correct number to send otp",
+      });
     }
   } catch (error) {
     return res.status(400).json({ status: "failed", message: error.message });
@@ -215,10 +216,26 @@ async function userlogin(req, res, next) {
   }
 }
 
+async function getuser(req, res, next) {
+  // console.log(req.query.patient_id, "id");
+  try {
+    const id = req.query.patient_id;
+    const user = await userSchema.findOne({ patient_id: id });
+    if (!user) {
+      return res.json({ status: "failed", message: "user not found" });
+    } else {
+      res.status(200).json({ status: "success", message: "user", data: user });
+    }
+  } catch (error) {
+    return res.status(400).json({ status: "failed", message: error.message });
+  }
+}
+
 export default {
   register,
   login,
   userlogin,
   OTP,
   Update,
+  getuser,
 };

@@ -20,6 +20,7 @@ const initialState = {
   error: "",
   success: false,
 };
+
 // export const userlogin = createAsyncThunk("user/userlogin", (values) => {
 //   axios
 //     .post("http://localhost:8080/v1/api/admin/common-login", values)
@@ -71,7 +72,7 @@ export const userlogin = createAsyncThunk(
           message.success(data.message);
         }, 1000);
         // const decode = jwt_decode(data.data);
-        // window.location.href = "/";
+        //  window.location.href = "/";
         return data.data;
       } else {
         setTimeout(() => {

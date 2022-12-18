@@ -4,16 +4,57 @@ import axios from "axios";
 import { SERVER_URL } from "../../Globals";
 import decode from "jwt-decode";
 import { Typography } from "antd";
+import { useDispatch, useSelector } from "react-redux";
 import {
   SearchOutlined,
   UploadOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
-import { Button, Input, Space, Table, Form } from "antd";
+import { Button, Input, Space, Table, Form, message } from "antd";
 import "./patient.css";
+import { useNavigate } from "react-router-dom";
 const { Title } = Typography;
-
 const Patient = () => {
+  const { user, loginStatus, token } = useSelector((state) => state.user);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [FirstName, setFirstName] = useState("");
+  const [LastName, setLastName] = useState("");
+  const [mobileNumber, setMobileNumber] = useState("");
+  const [gender, setGender] = useState("");
+  const [email, setEmail] = useState("");
+  const [updatemode, setUpdatemode] = useState(false);
+  const [patientId, setPatientId] = useState("");
+  useEffect(() => {
+    if (!JSON.parse(loginStatus)) {
+      navigate("/login");
+    }
+  }, [navigate, loginStatus]);
+  const getdetail = async () => {
+    if (token) {
+      console.log("token", token);
+      const decoder = await decode(token);
+      console.log("decode", decoder);
+      console.log("decoder", decoder.patient_id);
+      setPatientId(decoder.patient_id);
+      console.log(patientId);
+      const data = await axios
+        .get(SERVER_URL + `api/user/get-user?patient_id=${decoder.patient_id}`)
+        .then((res) => {
+          console.log("res", res.data.data);
+          setEmail(res.data.data.email);
+          setMobileNumber(res.data.data.mobile_number);
+          setFirstName(res.data.data.first_name);
+          setLastName(res.data.data.last_name);
+          setGender(res.data.data.gender);
+          setPatientId(res.data.data.patient_id);
+        });
+    }
+  };
+  useEffect(() => {
+    getdetail();
+  }, []);
+
   //form-layout
   const responsive_layout = {
     labelCol: {
@@ -32,23 +73,6 @@ const Patient = () => {
 
   //profile-update integration
 
-  let token = localStorage.getItem("token");
-  let decoder = decode(token);
-  console.log("decode token", decoder);
-  console.log(token);
-  console.log("decode", decoder);
-  // console.log("deco", decoder.userData.patient_id);
-  console.log("deco", decoder.patient_id);
-
-  const [patientId, setPatientId] = useState(decoder.patient_id);
-  const [FirstName, setFirstName] = useState(decoder.first_name);
-  const [mobileNumber, setMobileNumber] = useState(
-    decoder.mobile_number
-  );
-  const [gender, setGender] = useState(decoder.gender);
-  const [email, setEmail] = useState(decoder.email);
-  const [updatemode, setUpdatemode] = useState(false);
-
   const edit = () => {
     if (updatemode === true) {
       setUpdatemode(false);
@@ -56,21 +80,28 @@ const Patient = () => {
       setUpdatemode(true);
     }
   };
-  const updateprofile = async () => {
+
+  const updatemobilenumber = async (number) => {
+    // Function to generate OTP
+    console.log(number);
+    navigate("/otp-page", { state: { number } });
+  };
+  const updateprofile = async (data) => {
+    console.log(data);
     // let data = {
     //   mobile_number: mobileNumber,
     //   email: email,
     // };
     // console.log ('data', data)
-    axios
-      .put(
-        SERVER_URL + `api/user/edit?patient_id=${decoder.patient_id}`,
-        { mobile_number: mobileNumber, email: email }
-      )
-      .then((res) => {
-        console.log("result", res);
-      });
-    setUpdatemode(false);
+    //   axios
+    //     .put(SERVER_URL + `api/user/edit?patient_id=${patientId}`, {
+    //       // mobile_number: mobileNumber,
+    //       // email: email,
+    //     })
+    //     .then((res) => {
+    //       console.log("result", res);
+    //     });
+    //   setUpdatemode(false);
   };
 
   const [searchText, setSearchText] = useState("");
@@ -327,30 +358,43 @@ const Patient = () => {
                     ) : (
                       <p>
                         {/* name */}
-                        Name : {decoder.first_name}&nbsp;
-                        {decoder.last_name}
+                        Name : {FirstName}&nbsp;
+                        {LastName}
                       </p>
                     )}
                     <div>
                       {updatemode ? (
-                        <div className="row">
-                          <label
-                            for="mobile"
-                            class="profile-lable col-3 align-self-end"
-                          >
-                            Mobile
-                          </label>
-                          <div className="col-9 ">
-                            <input
-                              type="text"
-                              value={mobileNumber}
-                              onChange={(e) => setMobileNumber(e.target.value)}
-                              className="patient-input form-control form-control mb-2 rounded-0"
-                            />
+                        <div>
+                          <div className="row">
+                            <label
+                              for="mobile"
+                              class="profile-lable col-3 align-self-end"
+                            >
+                              Mobile
+                            </label>
+                            <div className="col-9 ">
+                              <input
+                                type="text"
+                                value={mobileNumber}
+                                onChange={(e) =>
+                                  setMobileNumber(e.target.value)
+                                }
+                                className="patient-input form-control form-control mb-2 rounded-0"
+                              />
+                            </div>
+                          </div>
+                          <div className="d-flex justify-content-end">
+                            <button
+                              className="profile-edit-btn btn my-3 mx-auto"
+                              onClick={() => updatemobilenumber(mobileNumber)}
+                            >
+                              Update MobileNumber
+                            </button>
                           </div>
                         </div>
                       ) : (
                         // <p>Mobile</p>
+
                         <p>Mobile : {mobileNumber}</p>
                       )}
                     </div>
@@ -373,8 +417,8 @@ const Patient = () => {
                           </div>
                         </div>
                       ) : (
-                        <p>Gender : {decoder.gender}</p>
                         // <p>Gender</p>
+                        <p>Gender : {gender}</p>
                       )}
                     </div>
                     <div>
@@ -396,7 +440,7 @@ const Patient = () => {
                           </div>
                         </div>
                       ) : (
-                        <p>Email : {decoder.email}</p>
+                        <p>Email : {email}</p>
                         // <p>Email</p>
                       )}
                     </div>

@@ -5,26 +5,38 @@ import { Input, Button, Form, Image, Typography, message } from "antd";
 import "./management.css";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import { useDispatch, useSelector } from "react-redux";
 // import { userSlice } from "../../redux/user/UserSlice";
 import { userlogin } from "../../redux/user/UserSlice";
 const { Title } = Typography;
 
-const Managemtnt_Login = () => {
+const Managemtnt_Login = (props) => {
+  const location = useLocation();
+  console.log("props", location.state);
+  if (location.state) {
+    setTimeout(() => {
+      message.warning(location.state);
+    }, 1000);
+  }
   const navigate = useNavigate();
-  const { user, token } = useSelector((state) => state.user);
+  const { user, token, loginStatus } = useSelector((state) => state.user);
   const [form] = Form.useForm();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (user.role === "user") {
-      navigate("/for-patient");
-    } else {
+    // if (loginStatus) {
+    //   if (user.role === "user") {
+    //     navigate(-2);
+    //   } else {
+    //     window.location.href = "/";
+    //   }
+    // }
+    if (loginStatus) {
       window.location.href = "/";
     }
-  }, [navigate, user]);
+  }, [navigate, loginStatus]);
   const formSubmit = (values) => {
     console.log(values);
     dispatch(userlogin(values));
