@@ -16,30 +16,34 @@ import {
   Select,
   Typography,
   Card,
+  Modal,
   message,
 } from "antd";
-
 import { SERVER_URL } from "../../Globals";
-
 import formData from "form-data";
-
 const { Title } = Typography;
 const { Option } = Select;
-
+const { Paragraph } = Typography;
 const Sign_up = () => {
   const [form] = Form.useForm();
-
+  const [issuccess, setSuccess] = useState(false);
+  const [patientid, setPatientid] = useState("");
+  const navigate = useNavigate();
   const formSubmit = (values) => {
-    //  console.log(values)
+    console.log(values);
     //  console.log(values.dob.toDate())
     axios
       .post(SERVER_URL + "api/user/register", values)
       .then((res) => {
         console.log("res", res);
-        if (res.data.status === true) {
+        if (res.data.status === "success") {
+          setPatientid(res.data.result.patient_id);
           setTimeout(() => {
             message.success(res.data.message);
           }, 1000);
+
+          setSuccess(true);
+          // navigate("/login");
         } else {
           setTimeout(() => {
             message.warning(res.data.message);
@@ -205,6 +209,44 @@ const Sign_up = () => {
             </p>
           </Card>
         </div>
+      </div>
+      <div>
+        <Modal
+          title="Patient Id"
+          open={issuccess}
+          okText="Ok"
+          onOk={() => {
+            {
+              navigate("/login");
+            }
+            setSuccess(false);
+          }}
+          cancelButtonProps={{
+            style: {
+              display: "none",
+            },
+          }}
+          className="modal-app"
+        >
+          <div>
+            <Card>
+              <p className="text-modal">
+                Your Patient id :
+                <Paragraph
+                  copyable={{
+                    tooltips: ["click here to copy", "you clicked!!"],
+                  }}
+                  className="d-inline"
+                >
+                  {patientid}
+                </Paragraph>
+                <br />
+                Use this Id for Logging into your account in future. Copy this
+                Id.
+              </p>
+            </Card>
+          </div>
+        </Modal>
       </div>
     </>
   );

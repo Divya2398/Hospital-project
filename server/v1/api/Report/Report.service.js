@@ -1,4 +1,5 @@
 import reportSchema from "./Report.model.js";
+import specialist from "../Specialist/specialist.model.js";
 import moment from "moment";
 import userModel from "../User/user.model.js";
 
@@ -191,10 +192,56 @@ async function getreport(req, res) {
   } catch (error) {}
 }
 
+async function forpatientreport(req, res) {
+  try {
+    let patient_id = req.query.patient_id;
+    // let date = req.query.date;
+    const report = await reportSchema.aggregate([
+      { $match: { patient_id: patient_id } },
+      {
+        $group: {
+          _id: {
+            specialist_id: "$specialist_id",
+          },
+        },
+      },
+    ]);
+    if (report.length) {
+      let finaldata = [];
+      for (let i = 0; i < report.length; i++) {
+        const deoctordata = report[i];
+        console.log("id", deoctordata._id);
+        let find_doctor = await specialist
+          .findOne({ specialist_id: deoctordata._id.specialist_id })
+          .exec();
+        // console.log(find_doctor);
+        finaldata.push(find_doctor);
+      }
+      res.json({
+        status: "success",
+        message: "report fetched",
+        data: finaldata,
+      });
+    } else {
+      res.json({
+        status: "fail",
+        message: "no data",
+      });
+    }
+  } catch (error) {
+    res.json({
+      status: "failure",
+      message: "no data",
+      error: error.message,
+    });
+  }
+}
+
 export default {
   addreport,
   getPatientReport,
   getreport,
   patientReportId,
   checkpatienthistory,
+  forpatientreport,
 };

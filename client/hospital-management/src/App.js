@@ -18,12 +18,13 @@ import Doctorlist from "./components/doctorpage/Doctorlist";
 import Map from "./components/map/google_map";
 import Patient from "./components/for_patient/Patient_data";
 import Terms from "./components/privacy/Terms";
-import Payment from "./components/payment/Payment";
 import { useDispatch, useSelector } from "react-redux";
 import Dept_dashboard from "./components/Department-portal/dept_dashboard/Dept_dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Otppage from "./components/management/Otppage";
-
+import Appointmentreport from "./components/for_patient/Appointmentreport";
+import Patientreports from "./components/Department-portal/patient_report/Patientreports";
+import ForPatientReport from "./components/for_patient/ForPatientReport";
 function App() {
   const { loginStatus, token } = useSelector((state) => state.user);
   const [state, setState] = useState({
@@ -66,7 +67,6 @@ function App() {
           {/* <Route exact path="/" element={<Homepage />} /> */}
           <Route path="/navbar" element={<Navbar />} />
           {/* <Route path="/management-login" element={<Managemtnt_Login />} /> */}
-          <Route path="/map" element={<Map />} />
           {/* <Route exact path="/login" element={<Managemtnt_Login />} /> */}
           {/* <Route path="/sign-up" element={<Sign_up />} /> */}
           {/* <Route path="/doctor-list" element={<Doctorlist />} /> */}
@@ -86,6 +86,16 @@ function App() {
             <Route path="/terms" element={<Terms />} />
             <Route path="/sign-up" element={<Sign_up />} />
             <Route path="/otp-page" element={<Otppage />} />
+            <Route
+              path="/appointment-report-history"
+              element={<Appointmentreport />}
+            />
+            <Route
+              exact
+              path="/forpatient-report"
+              element={<ForPatientReport />}
+            />
+
             {/* <Route
               path="/for-patient"
               element={

@@ -1,42 +1,61 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import { useLocation } from "react-router-dom";
+import Navbar from "../navbar/Navbar";
+import axios from "axios";
+import { SERVER_URL } from "../../Globals";
 import {
   SearchOutlined,
   UploadOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
-import { Button, Input, Space, Table, Avatar, Image, Typography } from "antd";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import jwt_decode from "jwt-decode";
-import { useDispatch, useSelector } from "react-redux";
-import { SERVER_URL } from "../../../Globals";
-const { Title } = Typography;
-const Dept_doctors = () => {
-  const [state, setState] = useState({
-    data: [],
-  });
+import { Button, Input, Space, Table, Form, message } from "antd";
+const Appointmentreport = () => {
+  const [state, setState] = useState({ data: [] });
+  const location = useLocation();
+  console.log("data", location.state);
+  //   const department_id = location.state.data.department_id;
+  const specialist_id = location.state.data.specialist_id;
+  const patient_id = location.state.patientId;
 
-  let token = localStorage.getItem("token");
-  const decode = jwt_decode(token);
-  console.log("decode", decode);
-  const id = decode.department_id;
-  console.log(decode.department_id);
   useEffect(() => {
     axios
       .get(
-        SERVER_URL + `api/specialist/getspecialistByDepId?department_id=${id}`
+        SERVER_URL +
+          `api/appointment/forpatient-appointment?patient_id=${patient_id}&specialist_id=${specialist_id}`
       )
       .then((res) => {
-        console.log("resul", res.data.result);
-        setState({
-          data: res.data.result,
-        });
+        console.log("res", res.data.result);
+        if (res.data.status === "success") {
+          setState({ data: res.data.result });
+        } else {
+          setTimeout(() => {
+            message.error(res.data.message);
+          }, 1000);
+        }
+      });
+    axios
+      .get(
+        SERVER_URL +
+          `api/appointment/forpatient-appointment?patient_id=${patient_id}&specialist_id=${specialist_id}`
+      )
+      .then((res) => {
+        console.log("res", res.data.result);
+        if (res.data.status === "success") {
+          setState({ data: res.data.result });
+        } else {
+          setTimeout(() => {
+            message.error(res.data.message);
+          }, 1000);
+        }
       });
   }, []);
   console.log("state", state);
   const data = state.data;
-  const inputRef = useRef(null);
-  // search function
+
+  const handlereport = (data) => {
+    console.log("data");
+  };
+  //search filter
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
@@ -127,68 +146,60 @@ const Dept_doctors = () => {
       }
     },
   });
+
+  //table column
   const columns = [
     {
-      title: "Doctor Id",
-      dataIndex: "specialist_id",
-      key: "specialist_id",
-      ...getColumnSearchProps("specialist_id"),
+      title: "Date",
+      dataIndex: "confrimed_date",
+      key: "confrimed_date",
+      ...getColumnSearchProps("confrimed_date"),
     },
+    {
+      title: "Appointment Id",
+      dataIndex: "appointment_id",
+      key: "appointment_id",
+      ...getColumnSearchProps("appointment_id"),
+    },
+
     {
       title: "Doctor Name",
-      // dataIndex: "data",
-      key: "doctor name",
-      render: (data) => data.specialist_name,
-      // ...getColumnSearchProps("specialist_name"),
+      dataIndex: "doctor_name",
+      key: "doctor_name",
     },
-
     {
-      title: "Doctor Profile",
-      // dataIndex: "doctor",
-      key: "doctor",
+      title: "Department",
+      dataIndex: "department_name",
+      key: "department_name",
+    },
+    {
+      title: "Your Report",
+      dataIndex: "",
       width: "15%",
-
-      render: (doctor) => (
-        <Avatar
-          src={
-            <Image
-              src={SERVER_URL + "uploads/specialist/" + doctor.image}
-              style={{ width: 32 }}
-              alt="profile"
-            />
-          }
-        />
+      fixed: "right",
+      key: "x",
+      render: (data) => (
+        <>
+          <Button onClick={handlereport(data)}>View Report</Button>
+        </>
       ),
     },
-    {
-      title: "Doctor Experience",
-      dataIndex: "experience",
-      key: "experience",
-    },
-    {
-      title: "Doctor Specialisation",
-      dataIndex: "specialisation",
-      key: "specialisation",
-    },
-    {
-      title: "OP Day",
-      dataIndex: "available_day",
-      key: "available_day",
-      fixed: "right",
-      render: (available_day) => available_day.map((service) => service).join(),
-    },
   ];
+
   return (
     <>
-      <Table
-        columns={columns}
-        dataSource={data}
-        scroll={{
-          x: 1300,
-        }}
-      />
+      <Navbar></Navbar>
+      <div className="mt-5 px-5">
+        <Table
+          columns={columns}
+          dataSource={data}
+          scroll={{
+            x: 1300,
+          }}
+        />
+      </div>
     </>
   );
 };
 
-export default Dept_doctors;
+export default Appointmentreport;

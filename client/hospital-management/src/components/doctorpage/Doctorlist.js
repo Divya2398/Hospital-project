@@ -240,10 +240,6 @@ const Doctorlist = () => {
     setIsSelecting(false);
   };
 
-  // const selectSlot = (data) => {
-  //   console.log("data", data);
-  // };
-
   const handleSubmit = () => {
     let decode = jwt_decode(token);
     const values = {
@@ -364,7 +360,6 @@ const Doctorlist = () => {
           </div>
         </div>
       </div>
-
       <div className="container-fluid  my-2">
         <div className="row row-cols-lg-3 row-cols-xxl-4 row-cols-md-2 row-cols-1 gy-3 gx-xl-5 gx-3">
           {selectdetail.data.map((obj) => {
@@ -489,117 +484,6 @@ const Doctorlist = () => {
             </Form>
           </div>
         </Modal>
-      </div>
-
-      <div class="container mt-5 mb-5">
-        {/* <div class="d-flex justify-content-between mb-3"> <span>Doctors</span> <button class="btn btn-success add">Add Doctors</button> </div> */}
-        {/* <div class="row g-2">
-          {selectdetail.data.map((obj) => {
-            console.log("obj", selectdetail.data);
-            return (
-              <div class="col-md-3">
-                <div class="card p-2 py-3 text-center">
-                  <div class="img mb-2">
-                    {" "}
-                    <img
-                      src={SERVER_URL + "uploads/specialist/" + obj.image}
-                      width="70"
-                      class="rounded-circle"
-                    />{" "}
-                  </div>
-                  <h5 class="mb-0">{obj.specialist_name}</h5>
-                  <small>{depName.name}</small>
-                  <div class="ratings mt-2">
-                    {" "}
-                    <i class="fa fa-star"></i> <i class="fa fa-star"></i>{" "}
-                    <i class="fa fa-star"></i> <i class="fa fa-star"></i>{" "}
-                  </div>
-                  <div class="mt-4 apointment">
-                    {" "}
-                    <button
-                      class="btn btn-success text-uppercase"
-                      onClick={() => {
-                        selectdata(obj.specialist_id, obj.department_id);
-                        // selectdata();
-                      }}
-                    >
-                      Book Appointment
-                    </button>{" "}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-
-          <div>
-            <Modal
-              title="Select Your Slot"
-              visible={isselecting}
-              // onOk={(values) => {
-              //   navigate("./payment");
-              //   console.log("values", values)
-              //   resetSelect();
-              // }}
-
-              onCancel={() => {
-                resetSelect();
-              }}
-              footer={null}
-              className="modal-app"
-            >
-              <div>
-                <Form
-                  {...responsive_layout}
-                  form={form}
-                  onFinish={handleSubmit}
-                >
-                  <Form.Item
-                    name="available_day"
-                    label="Choose Day for Appointment"
-                    // rules={[{ required: true, message: "Select day" }]}
-                  >
-                    <Select
-                      placeholder="Select a option below"
-                      allowClear
-                      onChange={handleChange}
-                    >
-                      {console.log("availableday.dayeeee", availableDay.data)}
-                      {availableDay.data?.map((data, index) => {
-                        return (
-                          <Option value={data.available_day} key={index}>
-                            {data.available_day}
-                          </Option>
-                        );
-                      })}
-                    </Select>
-                  </Form.Item>
-
-                  <Form.Item
-                    name="available_slot"
-                    label="Choose Slot Time"
-                    // rules={[
-                    //   { required: true, message: "Select consultation time" },
-                    // ]}
-                  >
-                    <Select placeholder="Select a option below" allowClear>
-                      {listSlot.data?.map((det, index) => {
-                        return (
-                          <Option value={det} key={index}>
-                            {det}
-                          </Option>
-                        );
-                      })}
-                    </Select>
-                  </Form.Item>
-
-                  <Form.Item>
-                    <Button htmlType="submit">Submit</Button>
-                  </Form.Item>
-                </Form>
-              </div>
-            </Modal>
-          </div>
-        </div> */}
       </div>
     </>
   );

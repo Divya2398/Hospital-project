@@ -1,9 +1,24 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { SearchOutlined } from "@ant-design/icons";
 import { Button, Input, Space, Table } from "antd";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { SERVER_URL } from "../../../Globals";
 
 const Patientlog = () => {
+  const [state, setState] = useState({ data: [] });
+  //get patients
+
+  const getusers = () => {
+    axios.get(SERVER_URL + "api/user/get-all-user").then((res) => {
+      console.log(res.data);
+      setState({ data: res.data.data });
+    });
+  };
+  const data = state.data;
+  useEffect(() => {
+    getusers();
+  }, []);
   //search-filter function  -----
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
@@ -103,24 +118,28 @@ const Patientlog = () => {
       ...getColumnSearchProps("patient_id"),
     },
     {
-      title: "Patient Name",
-      dataIndex: "patient_name",
-      key: "patient_name",
-      width: "25%",
-      ...getColumnSearchProps("patient_name"),
+      title: "Ptient First Name",
+      dataIndex: "first_name",
+      key: "first_name",
+      ...getColumnSearchProps("first_name"),
     },
     {
-      title: "Doctor Id",
-      dataIndex: "doctor_id",
-      key: "doctor_id",
+      title: "Ptient Last Name",
+      dataIndex: "last_name",
+      key: "last_name",
+
+      ...getColumnSearchProps("last_name"),
+    },
+    {
+      title: "DOB",
+      dataIndex: "dob",
+      key: "dob",
       width: "20%",
-      ...getColumnSearchProps("doctor_id"),
     },
     {
-      title: "Appointment Id",
-      dataIndex: "appointment_id",
-      key: "appointment_id",
-      ...getColumnSearchProps("appointment_id"),
+      title: "Gender",
+      dataIndex: "gender",
+      key: "gender",
     },
     {
       title: "Phone Number",
@@ -131,6 +150,7 @@ const Patientlog = () => {
   return (
     <Table
       columns={columns}
+      dataSource={data}
       scroll={{
         x: 1300,
       }}

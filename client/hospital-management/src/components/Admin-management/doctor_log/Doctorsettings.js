@@ -17,9 +17,9 @@ const Doctorsettings = () => {
         <TabPane tab="Specialist Log" key="1">
           <Doctorlog />
         </TabPane>
-        <TabPane tab="Slot Log" key="2">
+        {/* <TabPane tab="Slot Log" key="2">
           <Edit_doc />
-        </TabPane>
+        </TabPane> */}
       </Tabs>
     </div>
   );

@@ -1,12 +1,34 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { SearchOutlined } from "@ant-design/icons";
 import { Button, Input, Space, Table } from "antd";
 import { useNavigate } from "react-router-dom";
-
+import axios from "axios";
+import { SERVER_URL } from "../../../Globals";
 const Confirm = () => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
+  const [state, setState] = useState({
+    data: [],
+  });
+  // get appointments
+  const get = () => {
+    axios
+      .get(SERVER_URL + "api/appointment//get-Conform-Appointment")
+      .then((res) => {
+        console.log(res.data.result);
+        setState({
+          data: res.data.result,
+        });
+      });
+  };
+  useEffect(() => {
+    get();
+  }, []);
+
+  const data = state.data;
+
+  //search function
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -103,15 +125,15 @@ const Confirm = () => {
     },
     {
       title: "Patient Name",
-      dataIndex: "patient_name",
+      dataIndex: "data",
       key: "patient_name",
-      //   width: "25%",
-      ...getColumnSearchProps("patient_name"),
+      render: (data) => data.first_name + " " + data.last_name,
     },
     {
       title: "Phone Number",
-      dataIndex: "mobile_number",
+      dataIndex: "data",
       key: "mobile_number",
+      render: (data) => data.mobile_number,
     },
     {
       title: "Doctor Id",
@@ -125,7 +147,6 @@ const Confirm = () => {
       dataIndex: "doctor_name",
       key: "doctor_name",
       //   width: "20%",
-      ...getColumnSearchProps("doctor_name"),
     },
     {
       title: "Department Name",
@@ -154,6 +175,7 @@ const Confirm = () => {
       scroll={{
         x: 1800,
       }}
+      dataSource={data}
     />
   );
 };

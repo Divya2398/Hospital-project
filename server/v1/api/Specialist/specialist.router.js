@@ -22,9 +22,16 @@ const router = express.Router();
 router.post("/addSpecialist", upload.single("image"), Controller.addSpecialist);
 router.get("/getAllSpecialist", Controller.getAllSpecialist);
 router.get("/getSingleSpecialist", Controller.getSingleSpecialist);
-router.put("/updateDoctorWithImg", Controller.updateDoctorWithImg);
+router.put(
+  "/updateDoctorWithImg",
+  upload.single("image"),
+  Controller.updateDoctorWithImg
+);
 // router.put('/updateSpecialist', Controller.updateDoctorWithoutImg)
-router.put("/updateDoctorWithoutImage", Controller.updateDoctorWithoutImage);
+router.put(
+  "/updateDoctorWithoutImage/:specialist_id",
+  Controller.updateDoctorWithoutImage
+);
 router.get("/getspecialistByDepId", Controller.getspecialistByDepId);
 router.post("/addSlotDay", Controller.addSlotDay);
 router.post("/doctor-login", Controller.doctorlogin);

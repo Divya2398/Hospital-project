@@ -22,36 +22,31 @@ const Edit_dept = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [editdetail, setEditdetail] = useState(null);
 
-  const [state,setState] = useState({
-    data : ""
-  })
+  const [state, setState] = useState({
+    data: "",
+  });
 
   const [image, setImage] = useState({
-    dep_image : ""
-  })
+    dep_image: "",
+  });
 
-  useEffect(()=>{
-    axios.get(SERVER_URL+"api/departements/getAllDepartments")
-    .then((res)=>{
+  useEffect(() => {
+    axios.get(SERVER_URL + "api/departements/getAllDepartments").then((res) => {
       setState({
-        data : res.data.data
-      })
+        data: res.data.data,
+      });
+    });
 
-    })
-
-
-    console.log()
-
-  },[])
+    console.log();
+  }, []);
 
   const editdata = (department_id) => {
     console.log("data", department_id);
     setIsEditing(true);
     setEditdetail({ ...department_id });
-   
   };
 
-  console.log("editdetails", editdetail?.department_name)
+  console.log("editdetails", editdetail?.department_name);
 
   console.log(setEditdetail);
   const resetEditing = () => {
@@ -60,7 +55,7 @@ const Edit_dept = () => {
   };
 
   //TABLE VALUES
-  const data = state.data
+  const data = state.data;
 
   //search-filter function
   const [searchText, setSearchText] = useState("");
@@ -158,89 +153,95 @@ const Edit_dept = () => {
 
   //UPDATE FUNCTION
   const updateDepartment = () => {
+    console.log("update");
+    const id = {
+      department_id: editdetail.department_id,
+    };
+    console.log(id);
 
-    console.log("update")
-   const id = {
-    department_id : editdetail.department_id
-   }
-   console.log(id)
+    axios
+      .get(SERVER_URL + "api/departements/getSingleDepartment", { params: id })
+      .then((res) => {
+        console.log(
+          "res.data.data.department_image",
+          res.data.data.department_image
+        );
+        console.log(editdetail.department_image);
+        console.log("editdetail", editdetail);
 
-   axios.get(SERVER_URL+"api/departements/getSingleDepartment",{params:id})
-   .then((res)=>{
-    console.log("res.data.data.department_image",res.data.data.department_image)
-    console.log(editdetail.department_image)
-    console.log("editdetail",editdetail)
+        // if(res.data.data.department_image == editdetail.department_image){
+        //   console.log("without image")
+        // } else {
+        //   console.log("with image")
+        // }
 
-    // if(res.data.data.department_image == editdetail.department_image){
-    //   console.log("without image")
-    // } else {
-    //   console.log("with image")
-    // }
-
-    if(res.data.data.department_image == editdetail.department_image){
-      const dep_id = editdetail.department_id
-      let data ={
-        department_name : editdetail.department_name,
-        password : editdetail.password
-      }
-      console.log("dep_id", dep_id)
-      console.log("data", data)
-      axios.put(SERVER_URL+"api/departements/updateDepartmentWithoutImg",{department_id : dep_id, data : data})
-      .then((res)=>{
-        console.log(res)
-        axios.get(SERVER_URL+"api/departements/getAllDepartments")
-        .then((res)=>{
-          setState({
-            data : res.data.data
-          })
-    
-        })
-      }).catch(err =>{
-        console.log(err)
-      })
-    } else {
-
-      console.log("with img")
-    
-      //CREATE FORM DATA TO UPDATE WITH IMAGE
-      if(editdetail.department_image){
-
-        const formData = new FormData();
-
-        formData.append('department_name', editdetail.department_name);
-        formData.append('department_id', editdetail.department_id);
-        formData.append('department_image', editdetail.department_image);
-        formData.append('password', editdetail.password);
-  
-        axios.put(SERVER_URL+"api/departements/updateDepartmentWithImg", formData)
-        .then((res)=>{
-          console.log( "res.data.data",res.data.result)
-          axios.get(SERVER_URL+"api/departements/getAllDepartments")
-          .then((res)=>{
-            setState({
-              data : res.data.data
+        if (res.data.data.department_image == editdetail.department_image) {
+          const dep_id = editdetail.department_id;
+          let data = {
+            department_name: editdetail.department_name,
+            password: editdetail.password,
+          };
+          console.log("dep_id", dep_id);
+          console.log("data", data);
+          axios
+            .put(SERVER_URL + "api/departements/updateDepartmentWithoutImg", {
+              department_id: dep_id,
+              data: data,
             })
-      
-          })
-        }).catch(err =>{
-          console.log(err)
-        })
-  
-      }
+            .then((res) => {
+              console.log(res);
+              axios
+                .get(SERVER_URL + "api/departements/getAllDepartments")
+                .then((res) => {
+                  setState({
+                    data: res.data.data,
+                  });
+                });
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        } else {
+          console.log("with img");
 
-    
-      
-    }
+          //CREATE FORM DATA TO UPDATE WITH IMAGE
+          if (editdetail.department_image) {
+            const formData = new FormData();
 
-   }).catch(err =>{
-    console.log(err)
-   })
-   
+            formData.append("department_name", editdetail.department_name);
+            formData.append("department_id", editdetail.department_id);
+            formData.append("department_image", editdetail.department_image);
+            formData.append("password", editdetail.password);
+
+            axios
+              .put(
+                SERVER_URL + "api/departements/updateDepartmentWithImg",
+                formData
+              )
+              .then((res) => {
+                console.log("res.data.data", res.data.result);
+                axios
+                  .get(SERVER_URL + "api/departements/getAllDepartments")
+                  .then((res) => {
+                    setState({
+                      data: res.data.data,
+                    });
+                  });
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          }
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   //on image upload
   const handleOnChange = (data) => {
-    console.log("handleon change", data)
+    console.log("handleon change", data);
   };
 
   //table columns
@@ -326,92 +327,92 @@ const Edit_dept = () => {
       <div>
         <Modal
           title="Edit items"
-          visible={isEditing}
+          open={isEditing}
           okText="save"
           onCancel={() => {
             resetEditing();
           }}
-          onOk={() => { {updateDepartment()}
-          
+          onOk={() => {
+            {
+              updateDepartment();
+            }
+
             resetEditing();
           }}
         >
-         
-            <div>
-              <label>Department Name</label>
-                <Input
-                  type="text"
-                  name="department_name"
-                  value={editdetail?.department_name}
-                  onChange={(e) => {
-                    setEditdetail((pre) => { 
-                      return { ...pre, department_name: e.target.value };
-                    });
+          <div>
+            <label>Department Name</label>
+            <Input
+              type="text"
+              name="department_name"
+              value={editdetail?.department_name}
+              onChange={(e) => {
+                setEditdetail((pre) => {
+                  return { ...pre, department_name: e.target.value };
+                });
 
-                    console.log(editdetail)
-                  }}
-                />
-           </div>
+                console.log(editdetail);
+              }}
+            />
+          </div>
 
-           <div>
-           <label>password</label>
-                <Input
-                  type="text"
-                  name="password"
-                  value={editdetail?.password} 
-                  onChange={(e) => {
-                    setEditdetail((pre) => {
-                      return { ...pre, password: e.target.value };
-                    });
-                  }}
-                />
-           
-           </div>
+          <div>
+            <label>password</label>
+            <Input
+              type="text"
+              name="password"
+              value={editdetail?.password}
+              onChange={(e) => {
+                setEditdetail((pre) => {
+                  return { ...pre, password: e.target.value };
+                });
+              }}
+            />
+          </div>
 
-           <div>
-
+          <div>
             <label>Department Image</label>
-              <Upload
-                listType="picture"
-                //   action={"http://localhost:8000/items/admin/additemweb"}
-                beforeUpload={(file) => {
-                  // value = {editingItems?.item_image}
-                  setEditdetail({
-                    ...editdetail,
-                    department_image: file,
-                  });
+            <Upload
+              listType="picture"
+              //   action={"http://localhost:8000/items/admin/additemweb"}
+              beforeUpload={(file) => {
+                // value = {editingItems?.item_image}
+                setEditdetail({
+                  ...editdetail,
+                  department_image: file,
+                });
 
-                  // setImage({
-                  //   dep_image : file
-                  // })
-                  // console.log("editdetail",editdetail);
-                  console.log({ file });
-                  return false;
-                }}
-                // onChange={handleOnChange}
-                
-              >
-                <Button icon={<UploadOutlined />}>Click to Upload</Button>
-              </Upload>
-       
-              </div>
+                // setImage({
+                //   dep_image : file
+                // })
+                // console.log("editdetail",editdetail);
+                console.log({ file });
+                return false;
+              }}
+              // onChange={handleOnChange}
+            >
+              <Button icon={<UploadOutlined />}>Click to Upload</Button>
+            </Upload>
+          </div>
 
-              <div>
-              <label>Current Image</label>
+          <div>
+            <label>Current Image</label>
             {/* <Image width={100} src="" alt="logo" /> */}
             <Avatar
+              src={
+                <Image
                   src={
-                  <Image
-                  src= {SERVER_URL+"uploads/department_img/"+ editdetail?.department_image}
-                  style={{
-                  width: 32,
-                 
-                  }}
-                  />
+                    SERVER_URL +
+                    "uploads/department_img/" +
+                    editdetail?.department_image
                   }
-              />
-            </div>
-         
+                  style={{
+                    width: 32,
+                  }}
+                />
+              }
+            />
+          </div>
         </Modal>
       </div>
     </>

@@ -109,6 +109,17 @@
   border-color: rgb(204, 146, 39);
 }
 
+.forpatient-report-title {
+  height: 100px;
+  align-items: center;
+  color: rgb(70, 67, 67);
+  font-size: 16.5px;
+  background-image: linear-gradient(
+    to bottom right,
+    rgb(218, 187, 14),
+    rgb(231, 163, 17)
+  );
+}
 /* .pat-table .ant-table-thead > tr > th {
   background: rgba(105, 105, 104, 0.966);
   color: #fff;

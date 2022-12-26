@@ -1,11 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./navbar.css";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../redux/user/UserSlice";
-
+import axios from "axios";
+import { SERVER_URL } from "../../Globals";
 const Navbar = () => {
+  const [app, setApp] = useState([]);
   const dispatch = useDispatch();
   const { loginStatus } = useSelector((state) => state.user);
+  useEffect(() => {
+    axios
+      .get(SERVER_URL + "api/appSettings/getAppSettings")
+      .then((res) => {
+        // console.log(res.data.data[0]);
+        setApp(res.data.data[0]);
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+  }, []);
   // console.log("status", JSON.parse(loginStatus));
   return (
     <>
@@ -57,7 +70,7 @@ const Navbar = () => {
                 <button className="rounded-pill text-white btn contact-font">
                   <i class="fa-solid fa-mobile-screen"></i>
                   {/* <i class="fa-solid fa-phone"></i> */}
-                  +91-3456789100
+                  {app.mobilenumber}
                 </button>
               </li>
             </ul>
@@ -73,7 +86,7 @@ const Navbar = () => {
               height="40"
               className="d-inline-block align-text-center me-2"
             />
-            Title
+            {app.title}
           </a>
           <button
             className="navbar-toggler"

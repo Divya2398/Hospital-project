@@ -1,9 +1,25 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Breadcrumb, Layout, Menu } from "antd";
 import Navbar from "../navbar/Navbar";
 import "./Home.css";
+import axios from "axios";
+import { SERVER_URL } from "../../Globals";
 const { Header, Content, Footer } = Layout;
 const Homepage = () => {
+  const [appdata, setAppdata] = useState([]);
+  useEffect(() => {
+    axios
+      .get(SERVER_URL + "api/appSettings/getAppSettings")
+      .then((res) => {
+        console.log(res.data.data[0]);
+        setAppdata(res.data.data[0]);
+        // const data = res.data.data;
+        // console.log("data", res.data.data[0].policy);
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+  }, []);
   return (
     <>
       <Navbar></Navbar>
@@ -50,12 +66,14 @@ const Homepage = () => {
                   />
                   <div className="text-pos px-3 py-1 rounded-pill">
                     <p className="d-inline me-2 text-white border-white">
-                      Contact :<span className="phn">1234567890</span>
+                      Contact :
+                      <span className="phn">{appdata.mobilenumber}</span>
                     </p>
                     <p className=" border border-3 d-inline border-white"></p>
 
                     <p className="d-inline ms-2 text-white">
-                      Emergency :<span className="phn">1234567890</span>
+                      Emergency :
+                      <span className="phn">{appdata.emergency_number}</span>
                     </p>
                   </div>
                 </div>

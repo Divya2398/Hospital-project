@@ -22,9 +22,9 @@ import Patientreports from "../patient_report/Patientreports";
 import ReportSetting from "../patient_report/Reportsetting";
 import Dept_patient from "../dept_patient/Dept_patient";
 import Dept_patient_report from "../dept_patient/Dept_patient_report";
-
+import { useDispatch } from "react-redux";
 import jwt_decode from "jwt-decode";
-
+import { logout } from "../../../redux/user/UserSlice";
 const { Header, Sider, Content, Footer } = Layout;
 const Dept_dashboard = () => {
   const { Title } = Typography;
@@ -32,8 +32,10 @@ const Dept_dashboard = () => {
   const [title, setTitle] = useState("");
   const [logo, setLogo] = useState("");
   const [dept, setDept] = useState({});
+  const dispatch = useDispatch();
+
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    dispatch(logout());
     window.location.href = "/";
     //  localStorage.setItem("loginstatus","0")
   };

@@ -42,6 +42,19 @@ async function getTodayApp(req, res, next) {
     return res.json({ message: result.message });
   });
 }
+
+async function getAppointmenthistory(req, res, next) {
+  await Service.getAppointmenthistory(req, res, function (result) {
+    return res.json({ message: result.message });
+  });
+}
+
+async function getConformAppointment(req, res, next) {
+  await Service.getConformAppointment(req, res, function (result) {
+    return res.json({ message: result.message });
+  });
+}
+
 export default {
   requestedappointment,
   getRequestedAppointment,
@@ -50,4 +63,6 @@ export default {
   denyAppointment,
   getTodayAppointment,
   getTodayApp,
+  getAppointmenthistory,
+  getConformAppointment,
 };

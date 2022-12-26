@@ -48,6 +48,12 @@ async function getuser(req, res, next) {
   });
 }
 
+async function getalluser(req, res, next) {
+  await Service.getalluser(req, res, function (result) {
+    return res.json({ message: result.message });
+  });
+}
+
 export default {
   register,
   login,
@@ -56,4 +62,5 @@ export default {
   OTP,
   Update,
   getuser,
+  getalluser,
 };

@@ -13,20 +13,6 @@ const appointmentSchema = new mongoose.Schema(
     patient_name: { type: String, require: false },
     requested_date: { type: String, require: false },
     confrimed_date: { type: String, require: false },
-    //    slot:{
-    //     slot1 : {
-    //         type : String
-    //     },
-    //     slot2 : {
-    //         type : String
-    //     },
-    //     slot3 : {
-    //         type : String
-    //     },
-    //     slot4 : {
-    //         type : String
-    //     },
-    // },
     appointment_staus: {
       type: String,
       enum: ["pending", "booked", "deny", "conform"],

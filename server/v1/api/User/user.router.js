@@ -18,6 +18,7 @@ router.post("/userlogin", Controller.userlogin);
 router.post("/otp/:mobile_number", Controller.OTP);
 
 router.get("/get-user", Controller.getuser);
+router.get("/get-all-user", Controller.getalluser);
 
 // router.get('/register',  function(req, res){
 //     // register

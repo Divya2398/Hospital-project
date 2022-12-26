@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate, useLocation } from "react-router-dom";
+
 import {
   Input,
   Button,
@@ -8,14 +8,13 @@ import {
   Card,
   Select,
   Typography,
-  Divider,
   Space,
   Upload,
   Avatar,
   Image,
   message,
 } from "antd";
-import { PlusOutlined, UploadOutlined } from "@ant-design/icons";
+import { UploadOutlined } from "@ant-design/icons";
 import { SERVER_URL } from "../../../Globals";
 const { Title } = Typography;
 const { Option } = Select;
@@ -45,9 +44,6 @@ const Specialist = () => {
         console.log(err);
       });
   }, []);
-  //time picker format
-
-  // const format = "HH:mm";
 
   // let index = 0;
   // const [time, setTime] = useState("");
@@ -104,7 +100,6 @@ const Specialist = () => {
     formData.append("experience", data.experience);
     formData.append("time", data.time);
     formData.append("specialisation", data.specialisation);
-    // formData.append("available_slot", data.available_slot);
     formData.append("available_day", JSON.stringify(data.available_day));
     console.log("day", JSON.stringify(data.available_day));
     console.log(formData);
@@ -181,21 +176,6 @@ const Specialist = () => {
       value: "All",
     },
   ];
-
-  // const slotoption = [
-  //   {
-  //     value: "10:00 AM",
-  //   },
-  //   {
-  //     value: "12:00 PM",
-  //   },
-  //   {
-  //     value: "2:00 PM",
-  //   },
-  //   {
-  //     value: "4:00 PM",
-  //   },
-  // ]
 
   return (
     <>
@@ -308,7 +288,6 @@ const Specialist = () => {
               id=" time"
             />
           </Form.Item>
-
           <Form.Item
             label="Choose Day"
             type="text"
@@ -327,84 +306,6 @@ const Specialist = () => {
               onChange={handleChangeDay}
             />
           </Form.Item>
-
-          {/* <Form.Item
-            name="available_day"
-            label="Choose Available Day"
-            rules={[{ required: true, message: "Enter Available Day" }]}
-          >
-            <Select placeholder="Select a option below" allowClear>
-              <Option value="male">department 1</Option>
-              {
-                dayoption.map((options)=> (
-                  <Option value={options.value} key={options.value}>{options.value}</Option>
-                ))
-              }
-            </Select>
-          </Form.Item> */}
-
-          {/* <Form.Item label="Choose Slot Time" type="text" name="available_slot">
-            <Select
-              style={{
-                width: "100%",
-              }}
-              placeholder="Select Slot Time"
-              mode="multiple"
-              showArrow
-              onChange={handleChangeTime}
-              dropdownRender={(menu) => (
-                <>
-                  {menu}
-                  <Divider
-                    style={{
-                      margin: "8px 0",
-                    }}
-                  />
-                  <Space
-                    style={{
-                      padding: "0 8px 4px",
-                    }}
-                  >
-                    <Input
-                      type="time"
-                      placeholder="Please enter item"
-                      ref={inputRef}
-                      value={time}
-                      onChange={ontimeChange}
-                    />
-
-                    <Button
-                      type="text"
-                      icon={<PlusOutlined />}
-                      onClick={addItem}
-                    >
-                      Add item
-                    </Button>
-
-                  </Space>
-                </>
-              )}
-            >
-              {items.map((item) => (
-                <Option key={item}>{item}</Option>
-              ))}
-            </Select>
-          </Form.Item> */}
-
-          {/* <Form.Item
-            name="available_slot"
-            label="Choose Available Slot"
-            rules={[{ required: true, message: "Enter Available Slot" }]}
-          >
-            <Select placeholder="Select a option below" allowClear>
-              <Option value="male">department 1</Option>
-              {
-                slotoption.map((options)=> (
-                  <Option value={options.value} key={options.value}>{options.value}</Option>
-                ))
-              }
-            </Select>
-          </Form.Item> */}
 
           <Form.Item
             name="profile_pic"

@@ -10,9 +10,22 @@ import {
   UploadOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
-import { Button, Input, Space, Table, Form, message } from "antd";
+import {
+  Button,
+  Input,
+  Space,
+  Table,
+  Form,
+  message,
+  DatePicker,
+  Modal,
+} from "antd";
 import "./patient.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+import moment from "moment";
+
 const { Title } = Typography;
 const Patient = () => {
   const { user, loginStatus, token } = useSelector((state) => state.user);
@@ -25,11 +38,36 @@ const Patient = () => {
   const [email, setEmail] = useState("");
   const [updatemode, setUpdatemode] = useState(false);
   const [patientId, setPatientId] = useState("");
+  const [state, setState] = useState({ data: [] });
+  //set doctor detail
+  const [doctor_name, setDoctor_name] = useState("");
+  const [doctor_id, setDoctor_id] = useState("");
+  const [department_id, setDepartment_id] = useState("");
+  const [department_name, setDepartment_name] = useState("");
+  const [requested_date, setRequested_date] = useState("");
+  const [day, setDay] = useState([]);
+  const [form] = Form.useForm();
+  const [selectedDay, setSelectedDay] = useState("");
+  const [isselecting, setIsSelecting] = useState(false);
+  const [selectdetail, setSelectdetail] = useState({
+    data: [],
+  });
+  const [open, setOpen] = useState(false);
+
+  //date disable
+  dayjs.extend(customParseFormat);
+  //disable date
+  const disabledDate = (current) => {
+    return current && current < dayjs().endOf("day");
+  };
+
+  //checkingnlogin and redirect
   useEffect(() => {
     if (!JSON.parse(loginStatus)) {
       navigate("/login");
     }
   }, [navigate, loginStatus]);
+
   const getdetail = async () => {
     if (token) {
       console.log("token", token);
@@ -48,12 +86,38 @@ const Patient = () => {
           setLastName(res.data.data.last_name);
           setGender(res.data.data.gender);
           setPatientId(res.data.data.patient_id);
+        })
+        .catch((error) => {
+          setTimeout(() => {
+            message.error(error.message);
+          }, 1000);
+        });
+      axios
+        .get(
+          SERVER_URL +
+            `api/reports/forpatient-report?patient_id=${decoder.patient_id}`
+        )
+        .then((res) => {
+          console.log("res", res.data.data);
+          if (res.data.status === "success") {
+            setState({ data: res.data.data });
+          } else {
+            setTimeout(() => {
+              message.error(res.data.message);
+            }, 1000);
+          }
         });
     }
   };
+  console.log("state", state);
+  const data = state.data;
   useEffect(() => {
     getdetail();
   }, []);
+
+  // useEffect(() => {
+
+  // }, );
 
   //form-layout
   const responsive_layout = {
@@ -102,6 +166,56 @@ const Patient = () => {
     //       console.log("result", res);
     //     });
     //   setUpdatemode(false);
+  };
+
+  //appointment-booking
+  const selectdata = (data) => {
+    console.log("data", data);
+    setDepartment_id(data.department_id);
+    setDepartment_name(data.department_name);
+    setDoctor_id(data.specialist_id);
+    setDoctor_name(data.specialist_name);
+    setIsSelecting(true);
+    setOpen(true);
+  };
+
+  //reset selecting
+  const resetSelect = () => {
+    setIsSelecting(false);
+  };
+
+  const handleChange = (value) => {
+    // this.setState({selectValue:e.target.value});
+    console.log(value._d);
+    let reqdate = value._d;
+    setRequested_date(reqdate);
+    // setAvailableSlot({
+    //   data: value,
+    // });
+    // console.log("value", value);
+  };
+
+  const handleSubmit = () => {
+    let decoder = decode(token);
+    const values = {
+      department_id: department_id,
+      department_name: department_name,
+      doctor_id: doctor_id,
+      doctor_name: doctor_name,
+      patient_id: decoder.patient_id,
+      patient_name: decoder.patient_name,
+      requested_date: requested_date,
+    };
+    axios
+      .post(SERVER_URL + "/api/appointment/request-appointment", values)
+      .then((res) => {
+        console.log(res);
+        setTimeout(() => {
+          message.warning(res.data.message);
+        }, 1000);
+      });
+
+    // setIsSelecting(false);
   };
 
   const [searchText, setSearchText] = useState("");
@@ -197,35 +311,22 @@ const Patient = () => {
 
   //dummy data
 
-  const data = [
-    {
-      date: "2/2/2022",
-      appointment_id: "12334545",
-      specialist_name: "Dr.Sharan",
-      department_name: "Cardiology",
-    },
-    {
-      date: "2/2/2022",
-      appointment_id: "12334545",
-      specialist_name: "Dr.Sharan",
-      department_name: "Cardiology",
-    },
-  ];
+  // const data = [
+  //   {
+  //     date: "2/2/2022",
+  //     appointment_id: "12334545",
+  //     specialist_name: "Dr.Sharan",
+  //     department_name: "Cardiology",
+  //   },
+  //   {
+  //     date: "2/2/2022",
+  //     appointment_id: "12334545",
+  //     specialist_name: "Dr.Sharan",
+  //     department_name: "Cardiology",
+  //   },
+  // ];
 
   const columns = [
-    {
-      title: "Date",
-      dataIndex: "date",
-      key: "date",
-      ...getColumnSearchProps("date"),
-    },
-    {
-      title: "Appointment Id",
-      dataIndex: "appointment_id",
-      key: "appointment_id",
-      ...getColumnSearchProps("appointment_id"),
-    },
-
     {
       title: "Doctor Name",
       dataIndex: "specialist_name",
@@ -239,6 +340,26 @@ const Patient = () => {
       ...getColumnSearchProps("department_name"),
     },
     {
+      title: "Appointment history",
+      dataIndex: "",
+      width: "15%",
+      fixed: "right",
+      key: "x",
+      render: (data) => (
+        <>
+          <Button
+            onClick={() => {
+              navigate("/appointment-report-history", {
+                state: { data, patientId },
+              });
+            }}
+          >
+            Appointment history
+          </Button>
+        </>
+      ),
+    },
+    {
       title: "Your Report",
       dataIndex: "",
       width: "15%",
@@ -246,7 +367,13 @@ const Patient = () => {
       key: "x",
       render: (data) => (
         <>
-          <Button onClick={() => {}}>Your Report</Button>
+          <Button
+            onClick={() => {
+              navigate("/forpatient-report", { state: { data, patientId } });
+            }}
+          >
+            Your Report
+          </Button>
         </>
       ),
     },
@@ -258,7 +385,14 @@ const Patient = () => {
       key: "x",
       render: (data) => (
         <>
-          <Button onClick={() => {}}>Book Appointment</Button>
+          <Button
+            onClick={() => {
+              selectdata(data);
+              setDay(data.available_day);
+            }}
+          >
+            Request Appointment
+          </Button>
         </>
       ),
     },
@@ -469,7 +603,9 @@ const Patient = () => {
           The Reach Of Every Individual.”
         </p>
         <p>For New Appointment, click below</p>
-        <button className="btn new-app-btn">Book New Appointment</button>
+        <Link to={"/doctor-list"}>
+          <button className="btn new-app-btn">Book New Appointment</button>
+        </Link>
       </header>
 
       <div className="container-fluid mt-4 px-4 pat-table">
@@ -483,6 +619,48 @@ const Patient = () => {
             x: 1300,
           }}
         />
+      </div>
+      <div>
+        <Modal
+          title="Select Your Appointment date"
+          open={isselecting}
+          okText="Request Appointment"
+          onCancel={() => {
+            resetSelect();
+          }}
+          onOk={() => {
+            resetSelect();
+            handleSubmit();
+          }}
+          className="modal-app"
+        >
+          <div>
+            <Form {...responsive_layout}>
+              <p>
+                Selected Doctor is available on&nbsp;
+                {day.map((data) => {
+                  return (
+                    <span key={data} className="text-success">
+                      {data} , &nbsp;
+                    </span>
+                  );
+                })}
+              </p>
+              <Form.Item
+                name="available_day"
+                label="Choose date for Appointment"
+                // rules={[{ required: true, message: "Select day" }]}
+              >
+                <DatePicker
+                  picker="date"
+                  disabledDate={disabledDate}
+                  onChange={handleChange}
+                  format="YYYY/MM/DD"
+                />
+              </Form.Item>
+            </Form>
+          </div>
+        </Modal>
       </div>
     </>
   );

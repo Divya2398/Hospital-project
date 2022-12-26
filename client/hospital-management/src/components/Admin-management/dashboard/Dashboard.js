@@ -29,18 +29,20 @@ import Query_tab from "../user_query/Query_tab";
 import Departmentsetting from "../department/Departmentsetting";
 import Specialistsetting from "../specialist/Specialistsettings";
 import Appointmentsection from "../appointmentSection/Appointmentsection";
-
+import { useDispatch } from "react-redux";
+import { logout } from "../../../redux/user/UserSlice";
 const { Header, Sider, Content, Footer } = Layout;
 const Dashboard = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [title, setTitle] = useState("");
   const [logo, setLogo] = useState("");
+  const dispatch = useDispatch();
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    dispatch(logout());
     window.location.href = "/";
     //  localStorage.setItem("loginstatus","0")
   };
-  // const navigate = useNavigate();
+
   return (
     <Router>
       <Layout>

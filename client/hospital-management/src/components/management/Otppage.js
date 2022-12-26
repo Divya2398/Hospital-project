@@ -9,11 +9,12 @@ import { Button, Input, Space, Table, Form, message } from "antd";
 const Otppage = () => {
   const navigate = useNavigate();
   const [otp, setOtp] = useState("");
+  const [getotp, setGetotp] = useState("");
   const location = useLocation();
   //   console.log("loc", location.state);
   const mobile_number = location.state.number;
-  let getotp = "";
-  useEffect(() => {
+  // let getotp = "";
+  const sendotp = async () => {
     axios
       .post(SERVER_URL + `api/user/otp/${mobile_number}`)
       .then((res) => {
@@ -23,7 +24,7 @@ const Otppage = () => {
           setTimeout(() => {
             message.success(res.data.message);
           }, 1000);
-          getotp += res.data.data;
+          getotp(res.data.data);
         } else {
           setTimeout(() => {
             message.error(res.data.message);
@@ -40,20 +41,26 @@ const Otppage = () => {
           navigate("/for-patient");
         }, 2000);
       });
+  };
+  useEffect(() => {
+    sendotp();
   }, []);
 
   const handleChange = (enteredOtp) => {
     setOtp(enteredOtp);
   };
-  const submitotp = () => {
+  const verifyotp = () => {
     if (otp === getotp) {
-      return true;
+      console.log("true");
     } else {
-      return false;
+      console.log("false");
     }
   };
-  const disableotp = () => {};
-  //   console.log("otp", otp);
+
+  const resendotp = async () => {
+    sendotp();
+  };
+
   return (
     <>
       <Navbar></Navbar>
@@ -81,7 +88,7 @@ const Otppage = () => {
             />
             <button
               className="btn btn-warning py-1 mt-4 mx-3"
-              onClick={submitotp}
+              onClick={verifyotp}
             >
               Verify Otp
             </button>

@@ -29,10 +29,17 @@ async function checkpatienthistory(req, res) {
   });
 }
 
+async function forpatientreport(req, res) {
+  await Service.forpatientreport(req, res, function (result) {
+    return res.json({ message: result.message });
+  });
+}
+
 export default {
   addreport,
   getPatientReport,
   getreport,
   patientReportId,
   checkpatienthistory,
+  forpatientreport,
 };

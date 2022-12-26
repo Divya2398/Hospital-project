@@ -22,7 +22,6 @@ async function register(req, res, next) {
         message: "mobile number already exists or already registered",
       });
     }
-
     let userdata = new userSchema(req);
     let option = {
       authorization:
@@ -31,49 +30,17 @@ async function register(req, res, next) {
       numbers: ["7339080287"],
     };
 
-    // async function smsSend(option) {
-    //   const response = await fast2sms.sendMessage(option);
-    //   console.log(response);
-    // }
-    fast2sms
-      .sendMessage(option)
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    // let password = req.password;
-    // if (password) {
-    //   let salt = await bcrypt.genSalt(10);
-    //   userdata.password = bcrypt.hashSync(password, salt);
-    // }
-
-    // let data = await userdata.save();
-    // return res
-    //   .status(200)
-    //   .json({ status: "success", message: "register successed", result: data });
+    let password = req.password;
+    if (password) {
+      let salt = await bcrypt.genSalt(10);
+      userdata.password = bcrypt.hashSync(password, salt);
+    }
+    let data = await userdata.save();
+    return res
+      .status(200)
+      .json({ status: "success", message: "register successed", result: data });
   } catch (error) {
     return res.json({ status: "error found", message: error.message });
-  }
-}
-
-async function loginWithOutPassword(req, res, next) {
-  try {
-    const patientId = req.patient_id;
-    let user = await userSchema.findOne({ patient_id: patientId });
-
-    if (!user) {
-      return res.json({ status: "failed", message: "user not found" });
-    } else {
-      const token = jwt.sign({ user }, "key");
-      console.log("token", token);
-      res
-        .status(200)
-        .json({ status: "success", message: "login success!", token: token });
-    }
-  } catch (error) {
-    return res.status(400).json({ status: "failed", message: error.message });
   }
 }
 
@@ -231,6 +198,19 @@ async function getuser(req, res, next) {
   }
 }
 
+async function getalluser(req, res, next) {
+  try {
+    const user = await userSchema.find().exec();
+    if (!user) {
+      return res.json({ status: "failed", message: "no patients yet" });
+    } else {
+      res.status(200).json({ status: "success", message: "user", data: user });
+    }
+  } catch (error) {
+    return res.status(400).json({ status: "failed", message: error.message });
+  }
+}
+
 export default {
   register,
   login,
@@ -238,4 +218,5 @@ export default {
   OTP,
   Update,
   getuser,
+  getalluser,
 };

@@ -94,7 +94,7 @@ async function confirmAppointment(req, res, next) {
     console.log("data", req.body);
     let id = req.query.appointment_id;
     let date = req.body.confirm_date;
-    const data = moment(date).format("DD/MM/YYYY");
+    const data = moment(date).format("YYYY-MM-DD");
     const find = await appointmentSchema.findOne({ appointment_id: id }).exec();
     if (find) {
       console.log(find);
@@ -153,7 +153,7 @@ async function denyAppointment(req, res, next) {
 async function getTodayAppointment(req, res, next) {
   try {
     const current = new Date();
-    const date = moment(current).format("DD/MM/YYYY");
+    const date = moment(current).format("YYYY-MM-DD");
 
     console.log("date", date);
     const department_id = req.query.department_id;
@@ -186,7 +186,7 @@ async function getTodayAppointment(req, res, next) {
 async function getTodayApp(req, res, next) {
   try {
     const current = new Date();
-    const date = moment(current).format("DD/MM/YYYY");
+    const date = moment(current).format("YYYY-MM-DD");
     console.log("date", date);
     const department_id = req.query.department_id;
     const doctor_id = req.query.doctor_id;
@@ -271,6 +271,106 @@ async function Booked(req, res, next) {
   }
 }
 
+async function getAppointmenthistory(req, res, next) {
+  try {
+    console.log(req.query.specialist_id);
+    console.log("data", req.query.patient_id);
+    let id = req.query.specialist_id;
+    let patient_id = req.query.patient_id;
+    const find = await appointmentSchema
+      .find({ doctor_id: id, patient_id, appointment_staus: "conform" })
+      .exec();
+    if (find) {
+      console.log(find);
+      return res.json({
+        status: "success",
+        message: "appointment denied",
+        result: find,
+      });
+    } else {
+      return res.json({
+        status: "failure",
+        message: "something went wrong",
+      });
+    }
+  } catch (error) {
+    return res.json({ status: "error found", message: error.message });
+  }
+}
+//get conformed appointment
+async function getConformAppointment(req, res, next) {
+  try {
+    // date functions
+    let date = new Date();
+    date.setDate(date.getDate() + 1);
+    let AfterDate =
+      date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+    console.log(AfterDate);
+    let newdate = new Date();
+    newdate.setDate(newdate.getDate() - 1);
+    let beforeDate =
+      newdate.getFullYear() +
+      "-" +
+      (newdate.getMonth() + 1) +
+      "-" +
+      newdate.getDate();
+    let todaydate = new Date();
+    const current = moment(todaydate).format("YYYY-MM-DD");
+    const find = await appointmentSchema.aggregate([
+      {
+        $match: {
+          $and: [
+            { appointment_staus: "conform" },
+            {
+              $or: [
+                { confrimed_date: current },
+                { confrimed_date: AfterDate },
+                { confrimed_date: beforeDate },
+              ],
+            },
+          ],
+        },
+      },
+      {
+        $lookup: {
+          from: "user",
+          localField: "patient_id",
+          foreignField: "patient_id",
+          as: "data",
+        },
+      },
+      {
+        $unwind: {
+          path: "$data",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          "data.password": 0,
+          "data.role": 0,
+        },
+      },
+    ]);
+    if (find) {
+      console.log(find);
+      return res.json({
+        status: "success",
+        message: "appointment datas",
+        result: find,
+        data: find.length,
+      });
+    } else {
+      return res.json({
+        status: "failure",
+        message: "no data",
+      });
+    }
+  } catch (error) {
+    return res.json({ status: "error found", message: error.message });
+  }
+}
 export default {
   requestedappointment,
   getRequestedAppointment,
@@ -279,4 +379,6 @@ export default {
   denyAppointment,
   getTodayAppointment,
   getTodayApp,
+  getAppointmenthistory,
+  getConformAppointment,
 };

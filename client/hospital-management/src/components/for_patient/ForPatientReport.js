@@ -2,35 +2,27 @@ import React, { useState, useEffect } from "react";
 import { Card } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { useNavigate, useLocation } from "react-router-dom";
-import { SERVER_URL } from "../../../Globals";
+import { SERVER_URL } from "../../Globals";
+import { message } from "antd";
 import moment from "moment";
-import "./patientreport.css";
 import axios from "axios";
-const Patientreports = () => {
+import Navbar from "../navbar/Navbar";
+
+const ForPatientReport = () => {
   const location = useLocation();
+  console.log(location.state.data, " useLocation Hook");
   const [nodata, setNodata] = useState(false);
   const [state, setState] = useState({ data: [] });
-  console.log(location.state.data, " useLocation Hook");
-
+  const [patientdata, setPatientdata] = useState({});
   // state from previous component
   const detail = location.state.data;
-
-  //age calculation
-  let date = detail.data.dob;
-  let format = moment(date).format("YYYY-MM-DD");
-  let diff = moment(format).diff(moment(), "milliseconds");
-  let duration = moment.duration(diff);
-  let age = Math.abs(duration._data.years);
-  // console.log(duration, "age date");
-  // console.log(Math.abs(duration._data.years), "age date");
-
-  //show report
+  const patient_id = location.state.patientId;
 
   useEffect(() => {
     axios
       .get(
         SERVER_URL +
-          `api/reports/get-patient-Report?department_id=${detail.department_id}&patient_id=${detail.patient_id}&doctor_id=${detail.doctor_id}`
+          `api/reports/get-patient-Report?department_id=${detail.department_id}&patient_id=${patient_id}&doctor_id=${detail.doctor_id}`
       )
       .then((res) => {
         if (res.data.status === "success") {
@@ -42,20 +34,39 @@ const Patientreports = () => {
           setNodata(true);
         }
       });
-  }, [detail]);
+
+    const data = axios
+      .get(SERVER_URL + `api/user/get-user?patient_id=${patient_id}`)
+      .then((res) => {
+        console.log("res", res.data.data);
+        setPatientdata(res.data.data);
+      })
+      .catch((error) => {
+        setTimeout(() => {
+          message.error(error.message);
+        }, 1000);
+      });
+  }, []);
   console.log("state--", state);
+  //age calculation
+  let date = patientdata.dob;
+  let format = moment(date).format("YYYY-MM-DD");
+  let diff = moment(format).diff(moment(), "milliseconds");
+  let duration = moment.duration(diff);
+  let age = Math.abs(duration._data.years);
   return (
     <>
+      <Navbar />
       <div className="site-card-border-less-wrapper">
-        <Card title="Report history" bordered={false} className="report-title">
+        <Card title="Report history" bordered={false} className="">
           <div>
-            <div className="d-flex justify-content-around div-detail">
-              <p className="m-0">Patient Id : {detail.patient_id}</p>
+            <div className="d-flex justify-content-around forpatient-report-title">
+              <p className="m-0">Patient Id : {patientdata.patient_id}</p>
               <p className="m-0">
-                Name : {detail.data.first_name + " " + detail.data.last_name}
+                Name : {patientdata.first_name + " " + patientdata.last_name}
               </p>
               <p className="m-0">Age :{age}</p>
-              <p className="m-0">Gender : {detail.data.gender}</p>
+              <p className="m-0">Gender : {patientdata.gender}</p>
             </div>
             <div>
               {nodata ? (
@@ -72,15 +83,21 @@ const Patientreports = () => {
                   return (
                     <Card className="my-3">
                       <div className="report-date mb-3">
-                        <p>Date : {moment(key.date).format("DD/MM/YYYY")}</p>
+                        <p key={"date"}>
+                          Date : {moment(key.date).format("DD/MM/YYYY")}
+                        </p>
                       </div>
                       <div>
                         <p className="m-1 review-txt">Consultation Review</p>
-                        <p className="review-msg m-1">{key.message}</p>
+                        <p className="review-msg m-1" key={"message"}>
+                          {key.message}
+                        </p>
                       </div>
                       <div>
                         <p className="m-1 review-txt">Perscription</p>
-                        <p className="m-1 review-msg">{key.prescription}</p>
+                        <p className="m-1 review-msg" key={"prescription"}>
+                          {key.prescription}
+                        </p>
                       </div>
                     </Card>
                   );
@@ -94,4 +111,4 @@ const Patientreports = () => {
   );
 };
 
-export default Patientreports;
+export default ForPatientReport;

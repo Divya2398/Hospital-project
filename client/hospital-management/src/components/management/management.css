@@ -49,6 +49,11 @@
   justify-content: center;
 }
 
+.text-modal {
+  font-size: 15px;
+  font-weight: 500;
+  color: gray;
+}
 /* .otp-input:focus {
   border: solid rgb(224, 153, 21) 1px;
 } */

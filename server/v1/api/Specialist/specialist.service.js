@@ -204,22 +204,20 @@ async function getSingleSpecialist(req, res, next) {
 }
 
 async function updateDoctorWithImg(req, res) {
+  console.log("file", req.file);
+  console.log("body", req.body);
   try {
-    console.log("success");
     let id = req.body.specialist_id;
     let file = req.file.filename;
     console.log(file);
-    let data = {
-      // department_id:req.body.department_id,
-      specialist_name: req.body.specialist_name,
-      department_image: file,
-    };
-
+    // let data = {
+    //   specialist_name: req.body.specialist_name,
+    //   image: file,
+    // };
     console.log("data");
-
     let result = await specialistSchema.findOneAndUpdate(
       { specialist_id: id },
-      data,
+      { image: file },
       { new: true }
     );
     if (result) {
@@ -230,52 +228,53 @@ async function updateDoctorWithImg(req, res) {
         result: result,
       });
     } else {
-      return res.json({ status: "failed", message: "message" });
+      return res.json({ status: "failed", message: "something went wrong" });
     }
   } catch (error) {
     return res.json({ status: false, message: error.message });
   }
 }
 
-// async function updateDoctorWithoutImg(req,res){
-//     try {
-
-//         let id = req.body.specialist_id
-
-//         console.log(req.body)
-
-//        let data =  await specialistSchema.findOneAndUpdate({specialist_id:id}, req.body.data, {new:true})
-//         if(data){
-//             console.log(data)
-//             return res.json({status:'success', message:'updated', result:data})
-
-//         }else{
-//             return res.json({status:'failed', message:"message"})
-//         }
-
-//     } catch (error) {
-//         return res.json({status : false,  message:error.message })
-//     }
-// }
-
 async function updateDoctorWithoutImage(req, res) {
   console.log("success");
   try {
-    // console.log(req.body)
+    console.log(req.params.specialist_id);
+    // console.log(req.body);
+    console.log(req.body.data);
+    const change = req.body.data;
+    console.log(change);
     let data = await specialistSchema
-      .findOneAndUpdate(
-        { specialist_id: req.body.specialist_id },
-        { specialist_name: req.body.specialist_name },
-        { new: true }
-      )
+      .findOneAndUpdate({ specialist_id: req.params.specialist_id }, change, {
+        new: true,
+      })
       .exec();
     if (data) {
       return res.json({ status: "success", message: "Updated", result: data });
+    } else {
+      return res.json({ status: "fail", message: "something went wrong" });
     }
   } catch (error) {
     console.log(error);
   }
 }
+
+// async function updateDoctorWithoutImage(req, res) {
+//   console.log("success");
+//   try {
+//     // console.log(req.body)
+//     let data = await specialistSchema
+//       .findOneAndUpdate(
+//         { specialist_name: req.body.specialist_name },
+//         { new: true }
+//       )
+//       .exec();
+//     if (data) {
+//       return res.json({ status: "success", message: "Updated", result: data });
+//     }
+//   } catch (error) {
+//     console.log(error);
+//   }
+// }
 
 async function getspecialistByDepId(req, res, next) {
   try {
