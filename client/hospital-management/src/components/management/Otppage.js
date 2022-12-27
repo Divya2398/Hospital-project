@@ -29,7 +29,7 @@ const Otppage = () => {
           setTimeout(() => {
             message.error(res.data.message);
           }, 1000);
-          navigate("/for-patient");
+          // navigate("/for-patient");
         }
       })
       .catch((error) => {
@@ -38,7 +38,7 @@ const Otppage = () => {
           message.error(error.response.data.message);
         }, 500);
         setTimeout(() => {
-          navigate("/for-patient");
+          // navigate("/for-patient");
         }, 2000);
       });
   };

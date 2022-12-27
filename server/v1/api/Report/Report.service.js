@@ -237,6 +237,32 @@ async function forpatientreport(req, res) {
   }
 }
 
+// patient by appointment id
+async function appointmentreport(req, res) {
+  const patient_id = req.query.patient_id;
+  const appointment_id = req.query.appointment_id;
+  try {
+    const find = await reportSchema
+      .findOne({ patient_id, appointment_id })
+      .exec();
+    console.log("data", find);
+    if (find) {
+      res.json({ status: "success", message: "data fetched", data: find });
+    } else {
+      res.json({
+        status: "failure",
+        message: "no data",
+      });
+    }
+  } catch (error) {
+    res.json({
+      status: "failure",
+      message: "no data",
+      error: error.message,
+    });
+  }
+}
+
 export default {
   addreport,
   getPatientReport,
@@ -244,4 +270,5 @@ export default {
   patientReportId,
   checkpatienthistory,
   forpatientreport,
+  appointmentreport,
 };

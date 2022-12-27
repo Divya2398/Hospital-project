@@ -2,14 +2,17 @@ import React from "react";
 import { Input, Button, Form, Image, Typography } from "antd";
 import { LogoutOutlined } from "@ant-design/icons";
 import { Link, Navigate, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logout } from "../../../redux/doctor/DoctorSlice";
 import "./Doctorboard.css";
 const { Title } = Typography;
 
 const Doctorboard = () => {
+  const dispatch = useDispatch();
   //logout
   const navigate = useNavigate();
   const handlelogout = () => {
-    localStorage.removeItem("doctor-token");
+    dispatch(logout());
     navigate("/doctor-login");
   };
   return (

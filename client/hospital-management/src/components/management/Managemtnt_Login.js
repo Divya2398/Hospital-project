@@ -6,7 +6,6 @@ import "./management.css";
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 import { useNavigate, useLocation } from "react-router-dom";
-
 import { useDispatch, useSelector } from "react-redux";
 // import { userSlice } from "../../redux/user/UserSlice";
 import { userlogin } from "../../redux/user/UserSlice";
@@ -26,13 +25,6 @@ const Managemtnt_Login = (props) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // if (loginStatus) {
-    //   if (user.role === "user") {
-    //     navigate(-2);
-    //   } else {
-    //     window.location.href = "/";
-    //   }
-    // }
     if (loginStatus) {
       window.location.href = "/";
     }

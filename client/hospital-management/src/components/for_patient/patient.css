@@ -120,6 +120,16 @@
     rgb(231, 163, 17)
   );
 }
+
+.rep-heading {
+  color: rgb(201, 174, 24);
+  font-size: 18px;
+}
+
+.rep-data {
+  color: rgb(172, 172, 169);
+  font-size: 15px;
+}
 /* .pat-table .ant-table-thead > tr > th {
   background: rgba(105, 105, 104, 0.966);
   color: #fff;

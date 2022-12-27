@@ -34,6 +34,11 @@ async function forpatientreport(req, res) {
     return res.json({ message: result.message });
   });
 }
+async function appointmentreport(req, res) {
+  await Service.appointmentreport(req, res, function (result) {
+    return res.json({ message: result.message });
+  });
+}
 
 export default {
   addreport,
@@ -42,4 +47,5 @@ export default {
   patientReportId,
   checkpatienthistory,
   forpatientreport,
+  appointmentreport,
 };

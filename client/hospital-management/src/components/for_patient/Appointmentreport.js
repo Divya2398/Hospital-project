@@ -8,9 +8,13 @@ import {
   UploadOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
-import { Button, Input, Space, Table, Form, message } from "antd";
+import { Button, Input, Space, Table, Modal, message } from "antd";
+
 const Appointmentreport = () => {
+  const [isshow, setIsshow] = useState(false);
+  const [detail, setDetail] = useState(null);
   const [state, setState] = useState({ data: [] });
+  const [appdata, setAppdata] = useState({});
   const location = useLocation();
   console.log("data", location.state);
   //   const department_id = location.state.data.department_id;
@@ -54,6 +58,31 @@ const Appointmentreport = () => {
 
   const handlereport = (data) => {
     console.log("data");
+    setIsshow(true);
+    setDetail({ ...data });
+    axios
+      .get(
+        SERVER_URL +
+          `api/reports/appointment-report?patient_id=${data.patient_id}&appointment_id=${data.appointment_id}`
+      )
+      .then((res) => {
+        console.log("appdata", res.data);
+        if (res.data.status === "success") {
+          console.log("res", res.data.data);
+          setAppdata(res.data.data);
+        } else {
+          setTimeout(() => {
+            message.error(res.data.message);
+          }, 1000);
+        }
+      });
+  };
+  console.log("detail", detail?.doctor_name);
+
+  const resetEditing = () => {
+    setIsshow(false);
+    setDetail(null);
+    setAppdata({});
   };
   //search filter
   const [searchText, setSearchText] = useState("");
@@ -180,7 +209,14 @@ const Appointmentreport = () => {
       key: "x",
       render: (data) => (
         <>
-          <Button onClick={handlereport(data)}>View Report</Button>
+          <Button
+            type="primary"
+            onClick={() => {
+              handlereport(data);
+            }}
+          >
+            View Report
+          </Button>
         </>
       ),
     },
@@ -197,6 +233,32 @@ const Appointmentreport = () => {
             x: 1300,
           }}
         />
+      </div>
+      <div>
+        <Modal
+          title="Edit items"
+          open={isshow}
+          okText="OK"
+          cancelButtonProps={{
+            style: {
+              display: "none",
+            },
+          }}
+          onOk={() => {
+            resetEditing();
+          }}
+        >
+          <div>
+            <div>
+              <p className="rep-heading">Review</p>
+              <p className="rep-data">{appdata?.message}</p>
+            </div>
+            <div>
+              <p className="rep-heading">prescription</p>
+              <p className="rep-data">{appdata?.prescription}</p>
+            </div>
+          </div>
+        </Modal>
       </div>
     </>
   );

@@ -8,5 +8,5 @@ router.get("/get-Report", Controller.getreport);
 router.post("/patient-Report-byId", Controller.patientReportId);
 router.post("/view-patient-Report", Controller.checkpatienthistory);
 router.get("/forpatient-report", Controller.forpatientreport);
-
+router.get("/appointment-report", Controller.appointmentreport);
 export default router;

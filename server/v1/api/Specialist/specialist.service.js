@@ -3,52 +3,6 @@ import moment from "moment";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import departmentSchema from "../Departments/department.model.js";
-// async function addSpecialist(req,res,next){
-//     try {
-
-//             let file = req.file.filename;
-//             console.log("proceed", file)
-//             console.log(req.body)
-//             let data = await specialistSchema.findOne({specialist_name : req.body.specialist_name}).exec();
-//         if(data){
-//             return res.json({status : false, message : "Specialist name already exists", data })
-//         } else {
-//             let details = new specialistSchema(req.body);
-//             details.image = req.file.filename
-//             let result = await details.save();
-//             return res.json({status : true, message : "Specialist name added successfully", data :result })
-//         }
-
-//     } catch (error) {
-//         return res.json({status : false, message : error })
-//     }
-// }
-
-//NEW CHANGES TO ADD DAY AND SLOT
-// async function addSpecialist(req,res,next){
-//     try {
-
-//             let file = req.file.filename;
-//             console.log("proceed", file)
-//             console.log(req.body)
-//             let data = await specialistSchema.findOne({specialist_name : req.body.specialist_name}).exec();
-//         if(data){
-//             // return res.json({status : false, message : "Specialist name already exists", data })
-//             let details = await specialistSchema.findOneAndUpdate({specialist_name : req.body.specialist_name}, {$push:{available_slot:req.body.available_slot}}, {new:true}).exec();
-//             if(details){
-//                 return res.json({status : false, message : "Specialist slot added", details })
-//             }
-//         } else {
-//             let details = new specialistSchema(req.body);
-//             details.image = req.file.filename
-//             let result = await details.save();
-//             return res.json({status : true, message : "Specialist name added successfully", data :result })
-//         }
-
-//     } catch (error) {
-//         return res.json({status : false, message : error })
-//     }
-// }
 
 // async function addSpecialist(req,res,next){
 //     try {
@@ -389,17 +343,21 @@ async function addSlotDay(req, res, next) {
 }
 async function doctorlogin(req, res, next) {
   try {
+    const dept_id = req.query.department_id;
+    console.log("dept", dept_id);
     const id = req.body.specialist_id;
     const password = req.body.password;
     console.log("pass", password);
     console.log("id", req.body.specialist_id);
-    const doctor = await specialistSchema.findOne({ specialist_id: id }).exec();
+    const doctor = await specialistSchema
+      .findOne({ specialist_id: id, department_id: dept_id })
+      .exec();
     console.log("data", doctor);
     if (doctor) {
       // console.log(data.length);
       console.log("data", doctor);
-      let ismatch = bcrypt.compare(password, doctor.password);
-      if (ismatch) {
+      // let ismatch = await bcrypt.compare(password, doctor.password);
+      if (password === doctor.password) {
         const payload = {
           specialist_id: doctor.specialist_id,
           department_id: doctor.department_id,
@@ -438,7 +396,7 @@ export default {
   getAllSpecialist,
   getSingleSpecialist,
   updateDoctorWithImg,
-  // updateDoctorWithoutImg,
+
   updateDoctorWithoutImage,
   getspecialistByDepId,
   addSlotDay,
